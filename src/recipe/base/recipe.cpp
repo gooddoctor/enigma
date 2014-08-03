@@ -4,6 +4,43 @@
 
 using namespace recipe;
 
+Block::Block(const QByteArray& data, int multiplicity, const char fill) {
+  if (data.size() % multiplicity == 0)
+    this->data = data;
+  else
+    this->data = data.leftJustified(((data.size() / multiplicity) + 1) * multiplicity,
+				    fill);
+  this->multiplicity = multiplicity;
+  this->fill = fill;
+}
+
+Block::Block(const Block& other) {
+  this->data = other.data;
+  this->multiplicity = other.multiplicity;
+  this->fill = other.fill;
+}  
+
+char* Block::get_data() {
+  return data.data();
+}
+
+int Block::get_multiplicity() {
+  return multiplicity;
+}  
+
+char Block::get_fill() {
+  return fill;
+}
+
+int Block::get_size() {
+  return data.size();
+}
+
+QString Block::to_string() {
+  return QString(data);
+}
+
+
 static const QString TYPE_to_str[] = {"BOOL", "STRING", "URL"};
 
 Ingredient::Ingredient() : Ingredient("", false) { }
@@ -77,3 +114,7 @@ QString Recipe::to_string() {
   return str;
 }
 
+void recipe::e_assert(bool expression, const QString& message) {
+  if (expression == false)
+    throw std::logic_error(message.toStdString());
+}

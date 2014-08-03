@@ -7,6 +7,21 @@
 #include <QUrl>
 
 namespace recipe {
+  class Block {
+  public:
+    Block(const QByteArray& data, int multiplicity, const char fill);
+    Block(const Block& other);
+    char* get_data();
+    int get_multiplicity();
+    char get_fill();
+    int get_size();
+    QString to_string();
+  private:
+    QByteArray data;
+    int multiplicity;
+    char fill;
+  };
+
   class Ingredient {
   public:
     enum TYPE {BOOL, STRING, URL};
@@ -40,12 +55,15 @@ namespace recipe {
   typedef std::map<QString, Ingredient> Ingredients;
   public:
     Recipe();
-    Recipe* add_ingredient(const Ingredient& ingredient);
-    Ingredient get_ingredient(const QString& ingredient);
-    QString to_string();
+    virtual Recipe* add_ingredient(const Ingredient& ingredient);
+    virtual Ingredient get_ingredient(const QString& ingredient);
+    virtual Recipe* cook() = 0;
+    virtual QString to_string();
   private:
     Ingredients ingredients;
   };
+
+  void e_assert(bool expression, const QString& message);
 }
 
 #endif

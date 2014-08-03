@@ -15,10 +15,10 @@ CXX           = clang++
 DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -std=c++11 -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I. -I../../../tools/Qt/5.3/gcc_64/include -I../../../tools/Qt/5.3/gcc_64/include/QtGui -I../../../tools/Qt/5.3/gcc_64/include/QtCore -I.
+INCPATH       = -I../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I. -I/usr/local/include -I../../../tools/Qt/5.3/gcc_64/include -I../../../tools/Qt/5.3/gcc_64/include/QtGui -I../../../tools/Qt/5.3/gcc_64/include/QtCore -I.
 LINK          = clang++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/home/gooddocteur/tools/Qt/5.3/gcc_64 -Wl,-rpath,/home/gooddocteur/tools/Qt/5.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/home/gooddocteur/tools/Qt/5.3/gcc_64/lib -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/local/lib -lgcrypt -lgpg-error -L/home/gooddocteur/tools/Qt/5.3/gcc_64/lib -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /home/gooddocteur/bin/qmake
@@ -46,8 +46,10 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = recipe/base/recipe.cpp \
+		recipe/crypto.cpp \
 		main.cpp 
 OBJECTS       = recipe.o \
+		crypto.o \
 		main.o
 DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/common/shell-unix.conf \
@@ -158,6 +160,7 @@ DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/yacc.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/lex.prf \
 		enigma.pro recipe/base/recipe.cpp \
+		recipe/crypto.cpp \
 		main.cpp
 QMAKE_TARGET  = enigma
 DESTDIR       = #avoid trailing-slash linebreak
@@ -421,7 +424,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/enigma1.0.0 || mkdir -p .tmp/enigma1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.hpp recipe/crypto.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.cpp recipe/crypto.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
 
 
 clean:compiler_clean 
@@ -519,6 +522,71 @@ recipe.o: recipe/base/recipe.cpp recipe/base/recipe.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o recipe.o recipe/base/recipe.cpp
+
+crypto.o: recipe/crypto.cpp recipe/crypto.hpp \
+		/usr/local/include/gcrypt.h \
+		/usr/local/include/gpg-error.h \
+		recipe/base/recipe.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QUrl \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o crypto.o recipe/crypto.cpp
 
 main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtCore/QDebug \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
