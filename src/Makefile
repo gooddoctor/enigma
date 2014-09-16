@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = clang++
-DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -std=c++11 -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I. -I/usr/local/include -I../../../tools/Qt/5.3/gcc_64/include -I../../../tools/Qt/5.3/gcc_64/include/QtGui -I../../../tools/Qt/5.3/gcc_64/include/QtCore -I.
+INCPATH       = -I../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I. -I/usr/local/include -I../../../tools/Qt/5.3/gcc_64/include -I../../../tools/Qt/5.3/gcc_64/include/QtWidgets -I../../../tools/Qt/5.3/gcc_64/include/QtGui -I../../../tools/Qt/5.3/gcc_64/include/QtCore -I.
 LINK          = clang++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/home/gooddocteur/tools/Qt/5.3/gcc_64 -Wl,-rpath,/home/gooddocteur/tools/Qt/5.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/usr/local/lib -lgcrypt -lgpg-error -L/home/gooddocteur/tools/Qt/5.3/gcc_64/lib -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/local/lib -lgcrypt -lgpg-error -L/home/gooddocteur/tools/Qt/5.3/gcc_64/lib -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /home/gooddocteur/bin/qmake
@@ -47,10 +47,19 @@ OBJECTS_DIR   = ./
 
 SOURCES       = recipe/base/recipe.cpp \
 		recipe/crypto.cpp \
-		main.cpp 
+		view/ingredient/base/base.cpp \
+		view/ingredient/ingredient.cpp \
+		view/view.cpp \
+		main.cpp qrc_ingredient_res.cpp \
+		moc_view.cpp
 OBJECTS       = recipe.o \
 		crypto.o \
-		main.o
+		base.o \
+		ingredient.o \
+		view.o \
+		main.o \
+		qrc_ingredient_res.o \
+		moc_view.o
 DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/common/shell-unix.conf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/common/unix.conf \
@@ -147,6 +156,9 @@ DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_pre.prf \
 		recipe/base/include.inc \
 		recipe/include.inc \
+		view/ingredient/base/include.inc \
+		view/ingredient/include.inc \
+		view/include.inc \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_post.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf \
@@ -154,6 +166,7 @@ DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/resources.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/moc.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/unix/opengl.prf \
+		../../../tools/Qt/5.3/gcc_64/mkspecs/features/uic.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/unix/thread.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/testcase_targets.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/exceptions.prf \
@@ -161,6 +174,9 @@ DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/lex.prf \
 		enigma.pro recipe/base/recipe.cpp \
 		recipe/crypto.cpp \
+		view/ingredient/base/base.cpp \
+		view/ingredient/ingredient.cpp \
+		view/view.cpp \
 		main.cpp
 QMAKE_TARGET  = enigma
 DESTDIR       = #avoid trailing-slash linebreak
@@ -290,6 +306,9 @@ Makefile: enigma.pro ../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++/qmake.conf .
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_pre.prf \
 		recipe/base/include.inc \
 		recipe/include.inc \
+		view/ingredient/base/include.inc \
+		view/ingredient/include.inc \
+		view/include.inc \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_post.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf \
@@ -297,12 +316,15 @@ Makefile: enigma.pro ../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++/qmake.conf .
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/resources.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/moc.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/unix/opengl.prf \
+		../../../tools/Qt/5.3/gcc_64/mkspecs/features/uic.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/unix/thread.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/testcase_targets.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/exceptions.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/yacc.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/lex.prf \
 		enigma.pro \
+		view/ingredient/ingredient_res.qrc \
+		/home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Widgets.prl \
 		/home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Gui.prl \
 		/home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Core.prl
 	$(QMAKE) -o Makefile enigma.pro
@@ -402,6 +424,9 @@ Makefile: enigma.pro ../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++/qmake.conf .
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_pre.prf:
 recipe/base/include.inc:
 recipe/include.inc:
+view/ingredient/base/include.inc:
+view/ingredient/include.inc:
+view/include.inc:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/resolve_config.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_post.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf:
@@ -409,12 +434,15 @@ recipe/include.inc:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/resources.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/moc.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/unix/opengl.prf:
+../../../tools/Qt/5.3/gcc_64/mkspecs/features/uic.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/unix/thread.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/testcase_targets.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/exceptions.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/yacc.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/lex.prf:
 enigma.pro:
+view/ingredient/ingredient_res.qrc:
+/home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Widgets.prl:
 /home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Gui.prl:
 /home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Core.prl:
 qmake: FORCE
@@ -424,7 +452,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/enigma1.0.0 || mkdir -p .tmp/enigma1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.hpp recipe/crypto.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.cpp recipe/crypto.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents view/ingredient/ingredient_res.qrc .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.hpp recipe/crypto.hpp view/ingredient/base/base.hpp view/ingredient/ingredient.hpp view/view.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents recipe/base/recipe.cpp recipe/crypto.cpp view/ingredient/base/base.cpp view/ingredient/ingredient.cpp view/view.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
 
 
 clean:compiler_clean 
@@ -445,19 +473,129 @@ mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
 check: first
 
-compiler_rcc_make_all:
+compiler_rcc_make_all: qrc_ingredient_res.cpp
 compiler_rcc_clean:
-compiler_moc_header_make_all:
+	-$(DEL_FILE) qrc_ingredient_res.cpp
+qrc_ingredient_res.cpp: view/ingredient/ingredient_res.qrc \
+		view/ingredient/resource/bool.png
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/rcc -name ingredient_res view/ingredient/ingredient_res.qrc -o qrc_ingredient_res.cpp
+
+compiler_moc_header_make_all: moc_view.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) moc_view.cpp
+moc_view.cpp: view/ingredient/ingredient.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QUrl \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		view/ingredient/base/base.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QFont \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QGraphicsItem \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qset.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
+		view/view.hpp
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/usr/local/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore view/view.hpp -o moc_view.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
+compiler_uic_make_all:
+compiler_uic_clean:
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: 
+compiler_clean: compiler_rcc_clean compiler_moc_header_clean 
 
 ####### Compile
 
@@ -523,13 +661,10 @@ recipe.o: recipe/base/recipe.cpp recipe/base/recipe.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o recipe.o recipe/base/recipe.cpp
 
-crypto.o: recipe/crypto.cpp recipe/crypto.hpp \
-		/usr/local/include/gcrypt.h \
-		/usr/local/include/gpg-error.h \
-		recipe/base/recipe.hpp \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+crypto.o: recipe/crypto.cpp ../../../tools/Qt/5.3/gcc_64/include/QtCore/QFile \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
@@ -558,13 +693,280 @@ crypto.o: recipe/crypto.cpp recipe/crypto.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		recipe/crypto.hpp \
+		/usr/local/include/gcrypt.h \
+		/usr/local/include/gpg-error.h \
+		recipe/base/recipe.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/QUrl \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o crypto.o recipe/crypto.cpp
+
+base.o: view/ingredient/base/base.cpp view/ingredient/base/base.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QFont \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QGraphicsItem \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qset.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o base.o view/ingredient/base/base.cpp
+
+ingredient.o: view/ingredient/ingredient.cpp ../../../tools/Qt/5.3/gcc_64/include/QtGui/QFont \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QFontMetrics \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		view/ingredient/ingredient.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QUrl \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		view/ingredient/base/base.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QGraphicsItem \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qset.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ingredient.o view/ingredient/ingredient.cpp
+
+view.o: view/view.cpp view/view.hpp \
+		view/ingredient/ingredient.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QUrl \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlist.h \
@@ -585,8 +987,48 @@ crypto.o: recipe/crypto.cpp recipe/crypto.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o crypto.o recipe/crypto.cpp
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		view/ingredient/base/base.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QFont \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QGraphicsItem \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qset.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o view.o view/view.cpp
 
 main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtCore/QDebug \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
@@ -654,12 +1096,79 @@ main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtCore/QDebug \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qset.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QApplication \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qapplication.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcoreapplication.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qeventloop.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcursor.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpalette.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qkeysequence.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qevent.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qvector2d.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtouchdevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qguiapplication.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qinputmethod.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QGraphicsView \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgraphicsview.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qscrollarea.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qframe.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QMainWindow \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qmainwindow.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qtabwidget.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qicon.h \
+		recipe/crypto.hpp \
+		/usr/local/include/gcrypt.h \
+		/usr/local/include/gpg-error.h \
 		recipe/base/recipe.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/QUrl \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurlquery.h
+		view/ingredient/ingredient.hpp \
+		view/ingredient/base/base.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QFont \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QGraphicsItem \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+qrc_ingredient_res.o: qrc_ingredient_res.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_ingredient_res.o qrc_ingredient_res.cpp
+
+moc_view.o: moc_view.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_view.o moc_view.cpp
 
 ####### Install
 
