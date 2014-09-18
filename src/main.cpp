@@ -1,29 +1,29 @@
+#include <QApplication>
 #include <QDebug>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QMainWindow>
 
-#include "recipe/crypto.hpp"
+#include "widget/scene/ingredient/item/item.hpp"
 
-using namespace recipe;
+using namespace widget;
 
-int main(int, char**) {
-  Recipe* encrypt = new Encrypt;
-  encrypt->add_ingredient(Ingredient("input", QUrl("/home/gooddocteur/projects/enigma/"
-   						   "lab/some_body_to_know.txt")));
-  encrypt->add_ingredient(Ingredient("output", QUrl("/home/gooddocteur/projects/enigma/"
- 						    "lab/some_body_to_know.dec"))); 
-  encrypt->add_ingredient(Ingredient("password", QString("fish-sword")));
-  encrypt->add_ingredient(Ingredient("iv", QString("fish-sword")));
-  encrypt->add_ingredient(Ingredient("save", true));
-  encrypt->cook();
+int main(int argc, char** argv) {
+  QApplication app(argc, argv);
+  
+  Button* btn = new Button("How you doin?");
+  btn->on_click([]() {
+    qDebug() << "your lipse move but i cant hear what they say";
+  });
 
-  Recipe* decrypt = new Decrypt;
-  decrypt->add_ingredient(Ingredient("input", QUrl("/home/gooddocteur/projects/enigma/"
-						   "lab/some_body_to_know.dec")));
-  decrypt->add_ingredient(Ingredient("output", QUrl("/home/gooddocteur/projects/enigma/"
-						    "lab/some_body_to_know_dec.txt")));  
-  decrypt->add_ingredient(Ingredient("password", QString("fish-sword")));
-  decrypt->add_ingredient(Ingredient("iv", QString("fish-sword")));
-  decrypt->add_ingredient(Ingredient("save", true));
-  decrypt->cook();    
+  QGraphicsScene* scene = new QGraphicsScene();
+  scene->addItem(btn);
+  
+  QMainWindow* main_window = new QMainWindow();
+  main_window->setCentralWidget(new QGraphicsView(scene));
+  main_window->show();
 
-  qDebug() << encrypt->to_string();
+  return app.exec();
 }
+
+
