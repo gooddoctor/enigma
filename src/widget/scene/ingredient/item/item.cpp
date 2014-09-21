@@ -12,24 +12,30 @@ bool Item::is_hover() {
   return hover;
 }
 
+void Item::set_hover(bool hover) {
+  this->hover = hover; // do not need update. trust me
+}
+
 Item* Item::on_click(const ClickCallback& callback) {
   click_callbacks.push_back(callback);
   return this;
 }
 
-void Item::hoverEnterEvent(QGraphicsSceneHoverEvent*) {
+void Item::hoverEnterEvent(QGraphicsSceneHoverEvent* e) {
+  QGraphicsItem::hoverEnterEvent(e);
   hover = true;
   update();
 }
 
-void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent*) {
+void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent* e) {
+  QGraphicsItem::hoverLeaveEvent(e);
   hover = false;
   update();
 }
 
-void Item::mousePressEvent(QGraphicsSceneMouseEvent*) {
-  for (const auto& it : click_callbacks)
-    it();
+void Item::mousePressEvent(QGraphicsSceneMouseEvent* e) {
+  QGraphicsItem::mousePressEvent(e);
+  for (const auto& it : click_callbacks) it();
 }
 
 

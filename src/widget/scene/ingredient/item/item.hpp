@@ -17,14 +17,15 @@ namespace widget {
   public:
     Item(QGraphicsItem* parent = 0);
     bool is_hover();
+    void set_hover(bool hover);
     Item* on_click(const ClickCallback& callback);
   private:
     ClickCallbacks click_callbacks;
     bool hover = false;
   protected:
-    void hoverEnterEvent(QGraphicsSceneHoverEvent*) override;
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent*) override;
-    void mousePressEvent(QGraphicsSceneMouseEvent*) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* e) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* e) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* e) override;
   };
 
   class Button : public Item {

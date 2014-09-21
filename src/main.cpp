@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include <QMainWindow>
 
-#include "widget/scene/ingredient/item/item.hpp"
+#include "widget/scene/ingredient/ingredient.hpp"
 
 using namespace widget;
 
@@ -16,9 +16,15 @@ int main(int argc, char** argv) {
     qDebug() << "your lipse move but i cant hear what they say";
   });
 
+  String* pswd = new String("Password", "Fish-Sword");
+  pswd->on_click([]() {
+    qDebug() << "bullet proof";
+  });
+
   QGraphicsScene* scene = new QGraphicsScene();
-  scene->addItem(btn);
-  
+  scene->addItem(new Url("input", QUrl("/home/input.txt")));
+
+
   QMainWindow* main_window = new QMainWindow();
   main_window->setCentralWidget(new QGraphicsView(scene));
   main_window->show();
