@@ -6,22 +6,25 @@
 #include <QGraphicsItem>
 
 namespace widget {
-  static const QColor button_background(105, 210, 231);
-  static const QFont button_font("Monospace");
-  static const QFontMetrics button_metrics(button_font);
-
   class Item : public QGraphicsItem { 
   public:
     typedef std::function<void(void)>  ClickCallback;
     typedef std::vector<ClickCallback> ClickCallbacks;
   public:
     Item(QGraphicsItem* parent = 0);
+    QColor get_background();
+    void set_background(const QColor& background);
+    QFont get_font();
+    void set_font(const QFont& font);
     bool is_hover();
     void set_hover(bool hover);
+    QFontMetrics metrics() const;
     Item* on_click(const ClickCallback& callback);
   private:
-    ClickCallbacks click_callbacks;
+    QColor background;
+    QFont font;
     bool hover = false;
+    ClickCallbacks click_callbacks;
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* e) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* e) override;

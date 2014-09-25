@@ -22,7 +22,9 @@ int main(int argc, char** argv) {
   });
 
   QGraphicsScene* scene = new QGraphicsScene();
-  scene->addItem(new Url("input", QUrl("/home/input.txt")));
+  scene->addItem(new Bool("save", false));
+  
+  qDebug() << String::find("save");
 
 
   QMainWindow* main_window = new QMainWindow();

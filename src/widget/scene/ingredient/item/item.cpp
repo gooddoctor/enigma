@@ -8,12 +8,32 @@ Item::Item(QGraphicsItem* parent) : QGraphicsItem(parent) {
   setAcceptHoverEvents(true);
 }
 
+QColor Item::get_background() {
+  return background;
+}
+
+void Item::set_background(const QColor& background) {
+  this->background = background;
+}
+
+QFont Item::get_font() {
+  return font;
+}
+
+void Item::set_font(const QFont& font) {
+  this->font = font;
+}
+
 bool Item::is_hover() {
   return hover;
 }
 
 void Item::set_hover(bool hover) {
   this->hover = hover; // do not need update. trust me
+}
+
+QFontMetrics Item::metrics() const {
+  return QFontMetrics(font);
 }
 
 Item* Item::on_click(const ClickCallback& callback) {
@@ -41,20 +61,22 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
 Button::Button(const QString& text, QGraphicsItem* parent) : Item(parent) {
   this->text = text;
+  set_background(QColor(105, 210, 231));
+  set_font(QFont("Monospace"));
 }
 
 QRectF Button::boundingRect() const {
-  return QRectF(0, 0, button_metrics.width(text), button_metrics.height() + 10);
+  return QRectF(0, 0, metrics().width(text), metrics().height() + 10);
 }
 
 void Button::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
   painter->setPen(QPen());
-  painter->setFont(button_font);
+  painter->setFont(get_font());
   if (!is_hover())
-    painter->fillRect(boundingRect(), button_background);
+    painter->fillRect(boundingRect(), get_background());
   else
-    painter->fillRect(boundingRect(), QColor(button_background).darker(110));
-  painter->drawText(0, button_metrics.height(), text);
+    painter->fillRect(boundingRect(), QColor(get_background()).darker(110));
+  painter->drawText(0, metrics().height(), text);
 }
 
 
