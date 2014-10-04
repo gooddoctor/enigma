@@ -1,5 +1,4 @@
 include(item/include.inc)
-include(util/include.inc)
 
 RESOURCES += $$PWD/ingredient.qrc
 

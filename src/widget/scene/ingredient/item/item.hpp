@@ -5,6 +5,8 @@
 #include <QFontMetrics>
 #include <QGraphicsItem>
 
+#include "util/util.hpp"
+
 namespace widget {
   class Item : public QGraphicsItem { 
   public:

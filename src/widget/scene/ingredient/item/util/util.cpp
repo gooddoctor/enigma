@@ -13,3 +13,15 @@ QPixmap widget::to_grayscale(const QPixmap& original) {
   }
   return QPixmap::fromImage(image);
 }
+
+QPixmap widget::to_pixmap(QGraphicsView* view) {
+  //create
+  QPixmap pixmap(view->width(), view->height());
+  pixmap.fill(qRgb(255, 255, 255));
+  //render
+  QPainter painter(&pixmap);
+  view->render(&painter);
+  //thats it
+  return pixmap;
+}
+

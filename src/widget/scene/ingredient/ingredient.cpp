@@ -1,7 +1,5 @@
 #include <QPainter>
 
-#include "util/util.hpp"
-
 #include "ingredient.hpp"
 
 using namespace widget;

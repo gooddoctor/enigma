@@ -4,9 +4,11 @@
 #include <QGraphicsView>
 #include <QMainWindow>
 
-#include "widget/scene/ingredient/ingredient.hpp"
+#include "widget/widget.hpp"
 
 using namespace widget;
+
+RotationStackWidget* main_window;
 
 int main(int argc, char** argv) {
   QApplication app(argc, argv);
@@ -18,17 +20,16 @@ int main(int argc, char** argv) {
 
   String* pswd = new String("Password", "Fish-Sword");
   pswd->on_click([]() {
-    qDebug() << "bullet proof";
+    FilesystemScene* fs = new FilesystemScene();
+    main_window->push(fs);
   });
+  pswd->setPos(0, 40);
 
-  QGraphicsScene* scene = new QGraphicsScene();
-  scene->addItem(new Bool("save", false));
+  Scene* scene = new Scene();
+  scene->addItem(pswd);
   
-  qDebug() << String::find("save");
-
-
-  QMainWindow* main_window = new QMainWindow();
-  main_window->setCentralWidget(new QGraphicsView(scene));
+  main_window = new RotationStackWidget();
+  main_window->push(scene);
   main_window->show();
 
   return app.exec();
