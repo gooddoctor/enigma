@@ -27,13 +27,17 @@ Scene* Scene::on_cancel(const Item::ClickCallback& callback) {
 }
 
 
-PasswordScene::PasswordScene() {
+StringScene::StringScene() {
   input = addWidget(new QTextEdit());
   input->setPos(0, 20);
 }
 
+QString StringScene::get_input() {
+  return ((QTextEdit*)input->widget())->toPlainText();
+}
 
-FilesystemScene::FilesystemScene() {
+
+UrlScene::UrlScene() {
   //create widget
   QTreeView* tree = new QTreeView();
   QFileSystemModel* model = new QFileSystemModel();
@@ -42,4 +46,9 @@ FilesystemScene::FilesystemScene() {
   //add widget
   input = addWidget(tree);
   input->setPos(0, 20);
+}
+
+QUrl UrlScene::get_input() {
+  QFileSystemModel* model = (QFileSystemModel*)((QTreeView*)input->widget())->model();
+  return model->filePath(((QTreeView*)input->widget())->currentIndex());
 }

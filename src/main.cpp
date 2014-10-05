@@ -4,8 +4,11 @@
 #include <QGraphicsView>
 #include <QMainWindow>
 
+#include "recipe/crypto.hpp"
 #include "widget/widget.hpp"
 
+
+using namespace recipe;
 using namespace widget;
 
 RotationStackWidget* main_window;
@@ -13,21 +16,55 @@ RotationStackWidget* main_window;
 int main(int argc, char** argv) {
   QApplication app(argc, argv);
   
-  Button* btn = new Button("How you doin?");
-  btn->on_click([]() {
-    qDebug() << "your lipse move but i cant hear what they say";
-  });
-
-  String* pswd = new String("Password", "Fish-Sword");
-  pswd->on_click([]() {
-    FilesystemScene* fs = new FilesystemScene();
-    main_window->push(fs);
-  });
-  pswd->setPos(0, 40);
+  Recipe* encrypt = new Encrypt();
+  encrypt->add_ingredient(recipe::Ingredient("input", QUrl("/home/gooddocteur/projects/enigma/"
+							   "lab/some_body_to_know.txt")));
+  encrypt->add_ingredient(recipe::Ingredient("output", QUrl("/home/gooddocteur/projects/enigma/"
+							    "lab/some_body_to_know.dec"))); 
+  encrypt->add_ingredient(recipe::Ingredient("password", QString("fish-sword")));
+  encrypt->add_ingredient(recipe::Ingredient("iv", QString("fish-sword")));
+  encrypt->add_ingredient(recipe::Ingredient("save", true));
 
   Scene* scene = new Scene();
-  scene->addItem(pswd);
-  
+  int pos = 0;
+  for (auto& it : encrypt->get_ingredients()) {
+    switch (it.second.get_type()) {
+      case recipe::Ingredient::BOOL: {
+	Bool* boolean = new Bool(it.second.get_name(), it.second.get_bool_value());
+	boolean->setPos(pos, 60);
+	scene->addItem(boolean);
+	break;
+      }
+      case recipe::Ingredient::STRING: {
+	String* str = new String(it.second.get_name(), it.second.get_string_value());
+	str->on_click([str]() {
+	  StringScene* scene = new StringScene();
+	  scene->on_ok([str, scene]() {
+	    str->set_value(scene->get_input());
+	  });
+	  main_window->push(scene);
+	});
+	str->setPos(pos, 60);
+	scene->addItem(str);
+	break;
+      }
+      case recipe::Ingredient::URL: {
+	Url* url = new Url(it.second.get_name(), it.second.get_url_value());
+	url->on_click([url]() {
+	  UrlScene* scene = new UrlScene();
+	  scene->on_ok([url, scene]() {
+	    url->set_value(scene->get_input());
+	  });
+	  main_window->push(scene);
+	});
+	url->setPos(pos, 60);
+	scene->addItem(url);
+	break;
+      }
+    }
+    pos += 600;
+  }
+
   main_window = new RotationStackWidget();
   main_window->push(scene);
   main_window->show();

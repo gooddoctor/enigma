@@ -26,8 +26,14 @@ namespace widget {
     QString get_name() {
       return name;
     }
+    void set_name(const QString& name) {
+      this->name = name;
+    }
     T get_value() {
       return value;
+    }
+    void set_value(const T& value) {
+      this->value = value;
     }
   private:
     static Ingredients ingredients;

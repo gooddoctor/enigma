@@ -57,6 +57,7 @@ namespace recipe {
     Recipe();
     virtual Recipe* add_ingredient(const Ingredient& ingredient);
     virtual Ingredient get_ingredient(const QString& ingredient);
+    virtual Ingredients get_ingredients();
     virtual Recipe* cook() = 0;
     virtual QString to_string();
   private:

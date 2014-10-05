@@ -15,20 +15,20 @@ namespace widget {
   private:
     Button* ok;
     Button* cancel;
-  };
-
-  class PasswordScene : public Scene { Q_OBJECT
-  public:
-    PasswordScene();
-  private:
+  protected:
     QGraphicsProxyWidget* input;
   };
 
-  class FilesystemScene : public Scene { Q_OBJECT
+  class StringScene : public Scene { Q_OBJECT
   public:
-    FilesystemScene();
-  private:
-    QGraphicsProxyWidget* input;
+    StringScene();
+    QString get_input();
+  };
+
+  class UrlScene : public Scene { Q_OBJECT
+  public:
+    UrlScene();
+    QUrl get_input();
   };
 }
 

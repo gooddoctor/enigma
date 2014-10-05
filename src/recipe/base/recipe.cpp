@@ -107,6 +107,10 @@ Ingredient Recipe::get_ingredient(const QString& ingredient) {
   return ingredients[ingredient];
 }
 
+Recipe::Ingredients Recipe::get_ingredients() {
+  return ingredients;
+}
+
 QString Recipe::to_string() {
   QString str;
   for (const auto& it : ingredients)
