@@ -65,6 +65,32 @@ int main(int argc, char** argv) {
     pos += 600;
   }
 
+  Image* finish = new Image("resource/finish.png");
+  finish->on_click([encrypt]() {
+    for (auto& it : encrypt->get_ingredients()) {
+      switch (it.second.get_type()) {
+	case recipe::Ingredient::BOOL:
+	  encrypt->add_ingredient(recipe::
+				  Ingredient(it.second.get_name(),  
+					     Bool::find(it.second.get_name())->get_value()));
+	  break;
+	case recipe::Ingredient::STRING:
+	  encrypt->add_ingredient(recipe::
+				  Ingredient(it.second.get_name(),
+					     String::find(it.second.get_name())->get_value()));
+	  break;
+	case recipe::Ingredient::URL:
+	  encrypt->add_ingredient(recipe::
+				  Ingredient(it.second.get_name(),
+					     Url::find(it.second.get_name())->get_value()));
+	  break;
+      }
+    }
+  });
+  finish->setPos(pos, 60);
+  scene->addItem(finish);
+
+
   main_window = new RotationStackWidget();
   main_window->push(scene);
   main_window->show();

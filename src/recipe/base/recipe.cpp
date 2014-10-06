@@ -98,6 +98,11 @@ Ingredient::Ingredient(const QString& name, const TYPE& type) {
 Recipe::Recipe() { }
 
 Recipe* Recipe::add_ingredient(const Ingredient& ingredient) {
+  //erase if needed
+  auto it = ingredients.find(ingredient.get_name());
+  if (it != ingredients.end())
+    ingredients.erase(it);
+  //insert it
   ingredients.insert({ingredient.get_name(), ingredient});
   return this;
 }
