@@ -86,6 +86,7 @@ int main(int argc, char** argv) {
 	  break;
       }
     }
+    encrypt->cook();
   });
   finish->setPos(pos, 60);
   scene->addItem(finish);
