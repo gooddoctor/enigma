@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
   });
   finish->setPos(pos, 60);
   scene->addItem(finish);
-
+  scene->setSceneRect(0, 0, 640, 480);
 
   main_window = new RotationStackWidget();
   main_window->push(scene);

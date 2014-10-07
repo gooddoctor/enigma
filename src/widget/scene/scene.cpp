@@ -28,7 +28,9 @@ Scene* Scene::on_cancel(const Item::ClickCallback& callback) {
 
 
 StringScene::StringScene() {
-  input = addWidget(new QTextEdit());
+  QTextEdit* text = new QTextEdit();
+  text->resize(620, 460);
+  input = addWidget(text);
   input->setPos(0, 20);
 }
 
@@ -40,6 +42,7 @@ QString StringScene::get_input() {
 UrlScene::UrlScene() {
   //create widget
   QTreeView* tree = new QTreeView();
+  tree->resize(620, 460); 
   QFileSystemModel* model = new QFileSystemModel();
   model->setRootPath(QDir::currentPath());
   tree->setModel(model);

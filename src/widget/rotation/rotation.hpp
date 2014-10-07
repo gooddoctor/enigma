@@ -6,12 +6,12 @@
 namespace widget {
   class Rotation : public QWidget { Q_OBJECT
   public:
-    Rotation(const QPixmap& from, const QPixmap& to, QWidget* parent = 0);
+    Rotation(const QImage& from, const QImage& to, QWidget* parent = 0);
   private slots:
     virtual void tick(qreal ticker) = 0;
   private:
-    QPixmap from;
-    QPixmap to;
+    QImage from;
+    QImage to;
   protected:
     void paintEvent(QPaintEvent*);
   protected:

@@ -5,13 +5,13 @@
 
 using namespace widget;
 
-QPixmap to_rotated(const QPixmap& original, int angle, Qt::Axis axis) {
+QImage to_rotated(const QImage& image, int angle, Qt::Axis axis) {
   QTransform transform;
   transform.rotate(angle, axis);
-  return original.transformed(transform);
+  return image.transformed(transform);
 }
 
-Rotation::Rotation(const QPixmap& from, const QPixmap& to, QWidget* parent) : QWidget(parent) {
+Rotation::Rotation(const QImage& from, const QImage& to, QWidget* parent) : QWidget(parent) {
   //setting pixmap
   this->from = from;
   this->to = to;
@@ -25,14 +25,14 @@ Rotation::Rotation(const QPixmap& from, const QPixmap& to, QWidget* parent) : QW
 void Rotation::paintEvent(QPaintEvent*) {
   QPainter painter(this);
   if (std::abs(degree) < 90)
-    painter.drawPixmap(QPointF(0, 0), to_rotated(from, degree, Qt::YAxis));
+    painter.drawImage(QPointF(0, 0), to_rotated(from, degree, Qt::YAxis));
   else
-    painter.drawPixmap(QPointF(0, 0), to_rotated(to, degree, Qt::YAxis));
+    painter.drawImage(QPointF(0, 0), to_rotated(to, degree, Qt::YAxis));
 }
 
 
 LeftRotation::LeftRotation(const QPixmap& from, const QPixmap& to, QWidget* parent) 
-	    : Rotation(from, to_rotated(to, 180, Qt::YAxis), parent) { }
+	    : Rotation(from.toImage(), to_rotated(to.toImage(), 180, Qt::YAxis), parent) { }
 
 void LeftRotation::tick(qreal ticker) {
   degree = 180 * ticker;
@@ -41,7 +41,7 @@ void LeftRotation::tick(qreal ticker) {
 
 
 RightRotation::RightRotation(const QPixmap& from, const QPixmap& to, QWidget* parent) 
-	     : Rotation(from, to_rotated(to, -180, Qt::YAxis), parent) { }
+	     : Rotation(from.toImage(), to_rotated(to.toImage(), -180, Qt::YAxis), parent) { }
 
 void RightRotation::tick(qreal ticker) {
   degree = -180 * ticker;

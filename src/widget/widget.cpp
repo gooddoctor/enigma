@@ -2,7 +2,9 @@
 
 using namespace widget;
 
-StackWidget::StackWidget(QWidget* parent) : QStackedWidget(parent) { }
+StackWidget::StackWidget(QWidget* parent) : QStackedWidget(parent) {
+  setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+}
 
 StackWidget* StackWidget::push(Scene* scene) {
   QGraphicsView* current = new QGraphicsView(scene);
