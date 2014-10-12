@@ -25,14 +25,29 @@ int main(int argc, char** argv) {
   encrypt->add_ingredient(recipe::Ingredient("iv", QString("fish-sword")));
   encrypt->add_ingredient(recipe::Ingredient("save", true));
 
-  Scene* scene = new Scene();
-  int pos = 0;
+  OneIngredientScene* scene = new OneIngredientScene();
+  scene->setSceneRect(0, 0, 640, 480);
+  
+  Button* backward = new Button("Назад");
+  backward->setPos(0, 440);
+  backward->on_click([scene]() {
+    scene->before_one();
+  });
+  scene->addItem(backward);
+
+  Button* next = new Button("Вперед");
+  next->setPos(60, 440);
+  next->on_click([scene]() {
+    scene->after_one();
+  });
+  scene->addItem(next);
+
+
   for (auto& it : encrypt->get_ingredients()) {
     switch (it.second.get_type()) {
       case recipe::Ingredient::BOOL: {
 	Bool* boolean = new Bool(it.second.get_name(), it.second.get_bool_value());
-	boolean->setPos(pos, 60);
-	scene->addItem(boolean);
+	scene->add_ingredient(boolean);
 	break;
       }
       case recipe::Ingredient::STRING: {
@@ -44,8 +59,7 @@ int main(int argc, char** argv) {
 	  });
 	  main_window->push(scene);
 	});
-	str->setPos(pos, 60);
-	scene->addItem(str);
+	scene->add_ingredient(str);
 	break;
       }
       case recipe::Ingredient::URL: {
@@ -57,40 +71,37 @@ int main(int argc, char** argv) {
 	  });
 	  main_window->push(scene);
 	});
-	url->setPos(pos, 60);
-	scene->addItem(url);
+	scene->add_ingredient(url);
 	break;
       }
     }
-    pos += 600;
   }
 
-  Image* finish = new Image("resource/finish.png");
-  finish->on_click([encrypt]() {
-    for (auto& it : encrypt->get_ingredients()) {
-      switch (it.second.get_type()) {
-	case recipe::Ingredient::BOOL:
-	  encrypt->add_ingredient(recipe::
-				  Ingredient(it.second.get_name(),  
-					     Bool::find(it.second.get_name())->get_value()));
-	  break;
-	case recipe::Ingredient::STRING:
-	  encrypt->add_ingredient(recipe::
-				  Ingredient(it.second.get_name(),
-					     String::find(it.second.get_name())->get_value()));
-	  break;
-	case recipe::Ingredient::URL:
-	  encrypt->add_ingredient(recipe::
-				  Ingredient(it.second.get_name(),
-					     Url::find(it.second.get_name())->get_value()));
-	  break;
-      }
-    }
-    encrypt->cook();
-  });
-  finish->setPos(pos, 60);
-  scene->addItem(finish);
-  scene->setSceneRect(0, 0, 640, 480);
+  // Image* finish = new Image("resource/finish.png");
+  // finish->on_click([encrypt]() {
+  //   for (auto& it : encrypt->get_ingredients()) {
+  //     switch (it.second.get_type()) {
+  // 	case recipe::Ingredient::BOOL:
+  // 	  encrypt->add_ingredient(recipe::
+  // 				  Ingredient(it.second.get_name(),  
+  // 					     Bool::find(it.second.get_name())->get_value()));
+  // 	  break;
+  // 	case recipe::Ingredient::STRING:
+  // 	  encrypt->add_ingredient(recipe::
+  // 				  Ingredient(it.second.get_name(),
+  // 					     String::find(it.second.get_name())->get_value()));
+  // 	  break;
+  // 	case recipe::Ingredient::URL:
+  // 	  encrypt->add_ingredient(recipe::
+  // 				  Ingredient(it.second.get_name(),
+  // 					     Url::find(it.second.get_name())->get_value()));
+  // 	  break;
+  //     }
+  //   }
+  //   encrypt->cook();
+  // });
+  // finish->setPos(pos, 60);
+  // scene->addItem(finish);
 
   main_window = new RotationStackWidget();
   main_window->push(scene);

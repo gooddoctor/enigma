@@ -30,6 +30,27 @@ namespace widget {
     UrlScene();
     QUrl get_input();
   };
+
+  class OneItemScene : public Scene {
+    typedef std::vector<Item*> Items;
+  public:
+    OneItemScene* add_item(Item* item);
+    OneItemScene* before_one();
+    OneItemScene* after_one();
+  private:
+    Item* one = nullptr;
+    Items items; 
+  };
+  
+  class OneIngredientScene : public OneItemScene {
+  public:
+    template <typename T>
+    OneIngredientScene* add_ingredient(Ingredient<T>* ingredient) {
+      add_item(ingredient);
+      return this;
+    }
+  };
+
 }
 
 #endif

@@ -4,7 +4,6 @@
 #include <QTextEdit>
 #include <QTreeView>
 
-
 using namespace widget;
 
 Scene::Scene() : QGraphicsScene(nullptr) {
@@ -55,3 +54,43 @@ QUrl UrlScene::get_input() {
   QFileSystemModel* model = (QFileSystemModel*)((QTreeView*)input->widget())->model();
   return model->filePath(((QTreeView*)input->widget())->currentIndex());
 }
+
+
+OneItemScene* OneItemScene::add_item(Item* item) {
+  QSizeF scene_size = sceneRect().size();
+  QSizeF item_size = item->boundingRect().size();
+  item->setPos((scene_size.width() - item_size.width()) / 2,
+	       (scene_size.height() - item_size.height()) / 2); //middle
+  //make the ONE!
+  if (one == nullptr)
+    one = item;
+  else
+    item->hide();
+  //save it and add it to scene
+  items.push_back(item);
+  Scene::addItem(item);
+  //thats all
+  return this;
+}
+
+OneItemScene* OneItemScene::before_one() {
+  auto it = std::find(items.begin(), items.end(), one);
+  if (it != items.begin()) {
+    one->hide();
+    one = *(--it);
+    one->show();
+  }
+  return this;
+}
+
+OneItemScene* OneItemScene::after_one() {
+  auto it = std::find(items.begin(), items.end(), one); 
+  it++; //item after one
+  if (it != items.end()) {
+    one->hide();
+    one = *it;
+    one->show();
+  }
+  return this;
+}
+  
