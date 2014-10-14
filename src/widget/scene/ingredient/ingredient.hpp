@@ -35,6 +35,14 @@ namespace widget {
     void set_value(const T& value) {
       this->value = value;
     }
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
+      painter->setFont(get_font());
+      painter->drawRect(boundingRect());
+      painter->fillRect(boundingRect(), get_background());
+    }
+    QRectF boundingRect() const {
+      return QRectF(0, 0, 600, 360);
+    }
   private:
     static Ingredients ingredients;
   protected:
@@ -50,8 +58,7 @@ namespace widget {
   public:
     Bool(const QString& name, bool value);
     void toggle();
-    QRectF boundingRect() const override;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget) override;
   private:
     QPixmap pixmap;
   };
@@ -63,8 +70,7 @@ namespace widget {
     }
   public:
     String(const QString& name, const QString& value);
-    QRectF boundingRect() const override;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget) override;
   };
 
   class Url : public Ingredient<QUrl> {
@@ -74,8 +80,7 @@ namespace widget {
     } 
   public:
     Url(const QString& name, const QUrl& value);
-    QRectF boundingRect() const override;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget) override;
   };
 }
 

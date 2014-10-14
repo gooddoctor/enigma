@@ -10,12 +10,11 @@ namespace widget {
   class Scene : public QGraphicsScene { Q_OBJECT
   public:
     Scene();
-    Scene* on_ok(const Item::ClickCallback& callback);
+    Scene* on_finish(const Item::ClickCallback& callback);
     Scene* on_cancel(const Item::ClickCallback& callback);
-  private:
-    Button* ok;
-    Button* cancel;
   protected:
+    Button* finish;
+    Button* cancel;
     QGraphicsProxyWidget* input;
   };
 

@@ -62,7 +62,7 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 Button::Button(const QString& text, QGraphicsItem* parent) : Item(parent) {
   this->text = text;
   set_background(QColor(105, 210, 231));
-  set_font(QFont("Monospace"));
+  set_font(QFont("Monospace", 16, QFont::Bold));
 }
 
 QRectF Button::boundingRect() const {
@@ -77,6 +77,7 @@ void Button::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
   else
     painter->fillRect(boundingRect(), QColor(get_background()).darker(110));
   painter->drawText(0, metrics().height(), text);
+  painter->drawRect(boundingRect());
 }
 
 

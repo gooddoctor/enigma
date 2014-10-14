@@ -7,7 +7,6 @@
 #include "recipe/crypto.hpp"
 #include "widget/widget.hpp"
 
-
 using namespace recipe;
 using namespace widget;
 
@@ -26,6 +25,28 @@ int main(int argc, char** argv) {
   encrypt->add_ingredient(recipe::Ingredient("save", true));
 
   OneIngredientScene* scene = new OneIngredientScene();
+  scene->on_finish([encrypt]() {
+    for (auto& it : encrypt->get_ingredients()) {
+      switch (it.second.get_type()) {
+	case recipe::Ingredient::BOOL:
+	  encrypt->add_ingredient(recipe::
+				  Ingredient(it.second.get_name(),
+					     Bool::find(it.second.get_name())->get_value()));
+	  break;
+	case recipe::Ingredient::STRING:
+	  encrypt->add_ingredient(recipe::
+				  Ingredient(it.second.get_name(),
+					     String::find(it.second.get_name())->get_value()));
+	  break;
+	case recipe::Ingredient::URL:
+	  encrypt->add_ingredient(recipe::
+				  Ingredient(it.second.get_name(),
+					     Url::find(it.second.get_name())->get_value()));
+	  break;
+      }
+    }
+    encrypt->cook();
+  });      
   scene->setSceneRect(0, 0, 640, 480);
   
   Button* backward = new Button("Назад");
@@ -36,7 +57,7 @@ int main(int argc, char** argv) {
   scene->addItem(backward);
 
   Button* next = new Button("Вперед");
-  next->setPos(60, 440);
+  next->setPos(backward->boundingRect().width() + 5, 440);
   next->on_click([scene]() {
     scene->after_one();
   });
@@ -54,7 +75,7 @@ int main(int argc, char** argv) {
 	String* str = new String(it.second.get_name(), it.second.get_string_value());
 	str->on_click([str]() {
 	  StringScene* scene = new StringScene();
-	  scene->on_ok([str, scene]() {
+	  scene->on_finish([str, scene]() {
 	    str->set_value(scene->get_input());
 	  });
 	  main_window->push(scene);
@@ -66,7 +87,7 @@ int main(int argc, char** argv) {
 	Url* url = new Url(it.second.get_name(), it.second.get_url_value());
 	url->on_click([url]() {
 	  UrlScene* scene = new UrlScene();
-	  scene->on_ok([url, scene]() {
+	  scene->on_finish([url, scene]() {
 	    url->set_value(scene->get_input());
 	  });
 	  main_window->push(scene);

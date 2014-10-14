@@ -11,7 +11,7 @@ StackWidget* StackWidget::push(Scene* scene) {
   addWidget(current);
   setCurrentWidget(current);
   //setting callback
-  scene->on_ok(std::bind(&StackWidget::pop, this));
+  scene->on_finish(std::bind(&StackWidget::pop, this));
   scene->on_cancel(std::bind(&StackWidget::pop, this));
   return this;
 }

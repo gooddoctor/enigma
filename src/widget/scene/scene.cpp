@@ -7,16 +7,16 @@
 using namespace widget;
 
 Scene::Scene() : QGraphicsScene(nullptr) {
-  ok = new Button("OK");
-  ok->setPos(0, 0);
-  addItem(ok);
-  cancel = new Button("Cancel");
-  cancel->setPos(40, 0);
+  finish = new Button("Завершить");
+  finish->setPos(0, 5);
+  addItem(finish);
+  cancel = new Button("Отменить");
+  cancel->setPos(finish->boundingRect().width() + 5, 5);
   addItem(cancel);
 }
 
-Scene* Scene::on_ok(const Item::ClickCallback& callback) {
-  ok->on_click(callback);
+Scene* Scene::on_finish(const Item::ClickCallback& callback) {
+  finish->on_click(callback);
   return this;
 }
 
@@ -28,9 +28,9 @@ Scene* Scene::on_cancel(const Item::ClickCallback& callback) {
 
 StringScene::StringScene() {
   QTextEdit* text = new QTextEdit();
-  text->resize(620, 460);
+  text->resize(640, 480 - finish->boundingRect().height() - 10 - 5);
   input = addWidget(text);
-  input->setPos(0, 20);
+  input->setPos(0, finish->boundingRect().height() + 10);
 }
 
 QString StringScene::get_input() {
@@ -41,13 +41,13 @@ QString StringScene::get_input() {
 UrlScene::UrlScene() {
   //create widget
   QTreeView* tree = new QTreeView();
-  tree->resize(620, 460); 
+  tree->resize(640, 480 - finish->boundingRect().height() - 10 - 5);
   QFileSystemModel* model = new QFileSystemModel();
   model->setRootPath(QDir::currentPath());
   tree->setModel(model);
   //add widget
   input = addWidget(tree);
-  input->setPos(0, 20);
+  input->setPos(0, finish->boundingRect().height() + 10);
 }
 
 QUrl UrlScene::get_input() {
