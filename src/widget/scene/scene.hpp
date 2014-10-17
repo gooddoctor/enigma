@@ -27,7 +27,10 @@ namespace widget {
   class UrlScene : public Scene { Q_OBJECT
   public:
     UrlScene();
+    UrlScene* on_new_file(const Item::ClickCallback& callback);
     QUrl get_input();
+  private:
+    Button* new_file;
   };
 
   class OneItemScene : public Scene {

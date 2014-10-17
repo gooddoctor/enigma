@@ -39,15 +39,26 @@ QString StringScene::get_input() {
 
 
 UrlScene::UrlScene() {
+  new_file = new Button("Новый файл");
+  new_file->setPos(640 - new_file->boundingRect().width() - 5, 5);
+  addItem(new_file);
   //create widget
   QTreeView* tree = new QTreeView();
   tree->resize(640, 480 - finish->boundingRect().height() - 10 - 5);
   QFileSystemModel* model = new QFileSystemModel();
   model->setRootPath(QDir::currentPath());
   tree->setModel(model);
+  tree->hideColumn(1);
+  tree->hideColumn(2);
+  tree->hideColumn(3);  
   //add widget
   input = addWidget(tree);
   input->setPos(0, finish->boundingRect().height() + 10);
+}
+
+UrlScene* UrlScene::on_new_file(const Item::ClickCallback& callback) {
+  new_file->on_click(callback);
+  return this;
 }
 
 QUrl UrlScene::get_input() {

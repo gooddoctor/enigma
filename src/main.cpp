@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QDebug>
+#include <QDir>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QMainWindow>
@@ -90,6 +91,15 @@ int main(int argc, char** argv) {
 	  scene->on_finish([url, scene]() {
 	    url->set_value(scene->get_input());
 	  });
+	  scene->on_new_file([scene]() {
+	    StringScene* subscene = new StringScene();
+	    subscene->on_finish([scene, subscene]() {
+	      QFile file(QDir(scene->get_input().toString()).filePath(subscene->get_input()));
+	      file.open(QIODevice::ReadWrite); //create file
+	      file.close();
+	    });
+	    main_window->push(subscene);
+	  });
 	  main_window->push(scene);
 	});
 	scene->add_ingredient(url);
@@ -97,7 +107,7 @@ int main(int argc, char** argv) {
       }
     }
   }
-
+  
   // Image* finish = new Image("resource/finish.png");
   // finish->on_click([encrypt]() {
   //   for (auto& it : encrypt->get_ingredients()) {
