@@ -9,6 +9,8 @@ namespace widget {
   template <typename T>
   class  Ingredient : public Item {
     typedef std::vector<Ingredient<T>*> Ingredients;
+    typedef std::function<void(void)> ChangeCallback;
+    typedef std::vector<ChangeCallback> ChangeCallbacks;
   public:
     static Ingredient<T>* find(const QString& name) {
       for (auto it :ingredients) {
@@ -34,6 +36,10 @@ namespace widget {
     }
     void set_value(const T& value) {
       this->value = value;
+      for (const auto& it : change_callbacks) it(); //fire change, fire
+    }
+    void on_change(const ChangeCallback& callback) {
+      change_callbacks.push_back(callback);
     }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
       painter->setFont(get_font());
@@ -45,6 +51,7 @@ namespace widget {
     }
   private:
     static Ingredients ingredients;
+    ChangeCallbacks change_callbacks;
   protected:
     QString name;
     T value;

@@ -116,6 +116,15 @@ Recipe::Ingredients Recipe::get_ingredients() {
   return ingredients;
 }
 
+Recipe* Recipe::add_binding(const QString& first, const QString& second) {
+  bindings.insert(std::pair<QString, QString>{first, second});
+  return this;
+}
+
+Recipe::Bindings Recipe::get_bindings() {
+  return bindings;
+}
+
 QString Recipe::to_string() {
   QString str;
   for (const auto& it : ingredients)

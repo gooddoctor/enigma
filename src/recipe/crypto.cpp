@@ -4,6 +4,17 @@
 
 using namespace recipe;
 
+Crypto::Crypto() {
+  //add some common ingredient to our recipe
+  add_ingredient(Ingredient("input", QUrl("")));
+  add_ingredient(Ingredient("output", QUrl("")));
+  add_ingredient(Ingredient("password", QString("")));
+  add_ingredient(Ingredient("iv", QString("")));
+  add_ingredient(Ingredient("save", false));
+  //add some commin binding
+  add_binding("input", "output");
+}
+
 Crypto* Crypto::apply(const Callback& callback) {
   gcry_error_t error;
   gcry_cipher_hd_t cipher_hd;

@@ -30,6 +30,8 @@ namespace widget {
     UrlScene* on_new_file(const Item::ClickCallback& callback);
     QUrl get_input();
   private:
+    QWidget* create_tree();
+  private:
     Button* new_file;
   };
 

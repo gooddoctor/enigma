@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include <QApplication>
 #include <QDebug>
 #include <QDir>
@@ -108,6 +110,24 @@ int main(int argc, char** argv) {
     }
   }
   
+  for (auto& it : encrypt->get_bindings()) {
+    recipe::Ingredient first =  encrypt->get_ingredient(it.first);
+    recipe::Ingredient second =  encrypt->get_ingredient(it.second);
+    assert(first.get_type() == second.get_type()); //shit happens
+    switch (first.get_type()) {
+      case recipe::Ingredient::URL:
+	Url::find(first.get_name())->on_change([first, second]() {
+	  QString path =  Url::find(first.get_name())->get_value().toString(); //get first
+	  Url::find(second.get_name())->set_value(QUrl::fromLocalFile(path + ".dec")); //set second
+	});
+	break;
+      case recipe::Ingredient::BOOL:
+	break;
+      case recipe::Ingredient::STRING:
+	break;
+    }
+  }
+
   // Image* finish = new Image("resource/finish.png");
   // finish->on_click([encrypt]() {
   //   for (auto& it : encrypt->get_ingredients()) {

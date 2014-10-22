@@ -52,16 +52,20 @@ namespace recipe {
   };
 
   class Recipe {
-  typedef std::map<QString, Ingredient> Ingredients;
+    typedef std::map<QString, Ingredient> Ingredients;
+    typedef std::map<QString, QString> Bindings;
   public:
     Recipe();
     virtual Recipe* add_ingredient(const Ingredient& ingredient);
     virtual Ingredient get_ingredient(const QString& ingredient);
     virtual Ingredients get_ingredients();
+    virtual Recipe* add_binding(const QString& first, const QString& second);
+    virtual Bindings get_bindings();
     virtual Recipe* cook() = 0;
     virtual QString to_string();
   private:
     Ingredients ingredients;
+    Bindings bindings;
   };
 
   void e_assert(bool expression, const QString& message);

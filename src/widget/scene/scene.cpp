@@ -1,6 +1,7 @@
 #include "scene.hpp"
 
 #include <QFileSystemModel>
+#include <QStandardPaths>
 #include <QTextEdit>
 #include <QTreeView>
 
@@ -42,17 +43,8 @@ UrlScene::UrlScene() {
   new_file = new Button("Новый файл");
   new_file->setPos(640 - new_file->boundingRect().width() - 5, 5);
   addItem(new_file);
-  //create widget
-  QTreeView* tree = new QTreeView();
-  tree->resize(640, 480 - finish->boundingRect().height() - 10 - 5);
-  QFileSystemModel* model = new QFileSystemModel();
-  model->setRootPath(QDir::currentPath());
-  tree->setModel(model);
-  tree->hideColumn(1);
-  tree->hideColumn(2);
-  tree->hideColumn(3);  
   //add widget
-  input = addWidget(tree);
+  input = addWidget(create_tree());
   input->setPos(0, finish->boundingRect().height() + 10);
 }
 
@@ -64,6 +56,30 @@ UrlScene* UrlScene::on_new_file(const Item::ClickCallback& callback) {
 QUrl UrlScene::get_input() {
   QFileSystemModel* model = (QFileSystemModel*)((QTreeView*)input->widget())->model();
   return model->filePath(((QTreeView*)input->widget())->currentIndex());
+}
+
+QWidget* UrlScene::create_tree() {
+  //create model
+  QFileSystemModel* model = new QFileSystemModel();
+  model->setRootPath(QDir::currentPath());
+  //create and configure view
+  QTreeView* tree = new QTreeView();
+  tree->setFont(QFont("Monospace", 16, QFont::Bold));
+  tree->setModel(model);
+  tree->hideColumn(1);
+  tree->hideColumn(2);
+  tree->hideColumn(3);  
+  tree->resize(640, 480 - finish->boundingRect().height() - 10 - 5);
+  //expand view
+  QString home = QStandardPaths::standardLocations(QStandardPaths::HomeLocation)[0];
+  QDir home_dir(home);
+  do {
+    tree->expand(model->index(home_dir.absolutePath()));
+  } while (home_dir.cdUp());
+  //select home dir
+  tree->selectionModel()->setCurrentIndex(model->index(home), QItemSelectionModel::ClearAndSelect);
+  //thats all
+  return tree;
 }
 
 
