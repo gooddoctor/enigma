@@ -38,6 +38,9 @@ QString StringScene::get_input() {
   return ((QTextEdit*)input->widget())->toPlainText();
 }
 
+void StringScene::set_input(const QString& str) {
+  //under construction
+}
 
 UrlScene::UrlScene() {
   new_file = new Button("Новый файл");
@@ -58,6 +61,17 @@ QUrl UrlScene::get_input() {
   return model->filePath(((QTreeView*)input->widget())->currentIndex());
 }
 
+void UrlScene::set_input(const QUrl& url) {
+  QTreeView* tree = (QTreeView*)input->widget();
+  QFileSystemModel* model = (QFileSystemModel*)tree->model();
+  QDir url_dir(url.path());
+  do {
+    tree->expand(model->index(url_dir.absolutePath()));
+  } while (url_dir.cdUp());
+  tree->selectionModel()->setCurrentIndex(model->index(url.path()), 
+					  QItemSelectionModel::ClearAndSelect);
+}
+
 QWidget* UrlScene::create_tree() {
   //create model
   QFileSystemModel* model = new QFileSystemModel();
@@ -70,14 +84,6 @@ QWidget* UrlScene::create_tree() {
   tree->hideColumn(2);
   tree->hideColumn(3);  
   tree->resize(640, 480 - finish->boundingRect().height() - 10 - 5);
-  //expand view
-  QString home = QStandardPaths::standardLocations(QStandardPaths::HomeLocation)[0];
-  QDir home_dir(home);
-  do {
-    tree->expand(model->index(home_dir.absolutePath()));
-  } while (home_dir.cdUp());
-  //select home dir
-  tree->selectionModel()->setCurrentIndex(model->index(home), QItemSelectionModel::ClearAndSelect);
   //thats all
   return tree;
 }

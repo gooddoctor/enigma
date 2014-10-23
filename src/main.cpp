@@ -90,6 +90,7 @@ int main(int argc, char** argv) {
 	Url* url = new Url(it.second.get_name(), it.second.get_url_value());
 	url->on_click([url]() {
 	  UrlScene* scene = new UrlScene();
+	  scene->set_input(url->get_value());
 	  scene->on_finish([url, scene]() {
 	    url->set_value(scene->get_input());
 	  });

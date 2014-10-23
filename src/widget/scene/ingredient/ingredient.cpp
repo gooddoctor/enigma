@@ -47,7 +47,15 @@ Url::Url(const QString& name, const QUrl& value) : Ingredient<QUrl>(name, value)
 
 void Url::paint(QPainter* painter, const QStyleOptionGraphicsItem* item, QWidget* widget) {
   Ingredient<QUrl>::paint(painter, item, widget);
+  if (metrics().width("M") * value.path().size() > boundingRect().width()) { //stripped variant
+    QString stripped = value.path().mid(0, boundingRect().width() / metrics().width("M"));
+    stripped = stripped.mid(0, stripped.size() - 3) + "...";
+    painter->drawText((boundingRect().width() - metrics().width(stripped)) / 2, 
+		      (boundingRect().height() - metrics().height()) / 2, 
+		      stripped);
+  } else { //not stripped variant
   painter->drawText((boundingRect().width() - metrics().width(value.path())) / 2, 
 		    (boundingRect().height() - metrics().height()) / 2, 
 		    value.path());
+  }
 }

@@ -22,6 +22,7 @@ namespace widget {
   public:
     StringScene();
     QString get_input();
+    void set_input(const QString& str);
   };
 
   class UrlScene : public Scene { Q_OBJECT
@@ -29,6 +30,7 @@ namespace widget {
     UrlScene();
     UrlScene* on_new_file(const Item::ClickCallback& callback);
     QUrl get_input();
+    void set_input(const QUrl& url);
   private:
     QWidget* create_tree();
   private:
