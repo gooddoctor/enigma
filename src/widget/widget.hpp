@@ -3,8 +3,8 @@
 
 #include <QStackedWidget>
 
+#include "hint/hint.hpp"
 #include "rotation/rotation.hpp"
-
 #include "scene/scene.hpp"
 
 namespace widget {

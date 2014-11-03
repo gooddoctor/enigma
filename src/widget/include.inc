@@ -1,3 +1,4 @@
+include(hint/include.inc)
 include(rotation/include.inc)
 include(scene/include.inc)
 

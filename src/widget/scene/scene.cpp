@@ -57,11 +57,23 @@ UrlScene* UrlScene::on_new_file(const Item::ClickCallback& callback) {
 }
 
 QUrl UrlScene::get_input() {
-  QFileSystemModel* model = (QFileSystemModel*)((QTreeView*)input->widget())->model();
-  return model->filePath(((QTreeView*)input->widget())->currentIndex());
+  QTreeView* widget = (QTreeView*)input->widget();
+  QFileSystemModel* model = (QFileSystemModel*)widget->model();
+  if (QFileInfo(model->filePath(widget->currentIndex())).isFile())
+    return model->filePath(((QTreeView*)input->widget())->currentIndex());
+  else
+     return url;
 }
 
 void UrlScene::set_input(const QUrl& url) {
+  this->url = url;
+  //create url path if needed
+  if (!QFileInfo(url.path()).exists()) {
+    QFile file(url.path());
+    file.open(QIODevice::ReadWrite);
+    file.close();
+  }
+  //create and config widget
   QTreeView* tree = (QTreeView*)input->widget();
   QFileSystemModel* model = (QFileSystemModel*)tree->model();
   QDir url_dir(url.path());
@@ -112,6 +124,8 @@ OneItemScene* OneItemScene::before_one() {
     one->hide();
     one = *(--it);
     one->show();
+    //notify about it
+    fire_change();
   }
   return this;
 }
@@ -123,7 +137,21 @@ OneItemScene* OneItemScene::after_one() {
     one->hide();
     one = *it;
     one->show();
+    //notify about it
+    fire_change();
   }
   return this;
 }
-  
+
+Item* OneItemScene::get_one() {
+  return one;
+}
+
+OneItemScene* OneItemScene::one_change(const ChangeCallback& callback) {
+  change_callbacks.push_back(callback);
+  return this;
+}
+
+void OneItemScene::fire_change() {
+  for (const auto& it : change_callbacks) it();
+}

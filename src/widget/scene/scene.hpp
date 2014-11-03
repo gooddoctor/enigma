@@ -34,18 +34,26 @@ namespace widget {
   private:
     QWidget* create_tree();
   private:
+    QUrl url;
     Button* new_file;
   };
 
   class OneItemScene : public Scene {
     typedef std::vector<Item*> Items;
+    typedef std::function<void()> ChangeCallback;
+    typedef std::vector<ChangeCallback> ChangeCallbacks;
   public:
     OneItemScene* add_item(Item* item);
     OneItemScene* before_one();
     OneItemScene* after_one();
+    Item* get_one();
+    OneItemScene* one_change(const ChangeCallback& callback);
+  private:
+    void fire_change();
   private:
     Item* one = nullptr;
     Items items; 
+    ChangeCallbacks change_callbacks;
   };
   
   class OneIngredientScene : public OneItemScene {

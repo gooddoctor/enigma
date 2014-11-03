@@ -4,8 +4,19 @@
 
 using namespace widget;
 
-Item::Item(QGraphicsItem* parent) : QGraphicsItem(parent) {
+Item::Item(QGraphicsItem* parent) : Item("", parent) { }
+
+Item::Item(const QString& name, QGraphicsItem* parent) : QGraphicsItem(parent) {
+  this->name = name;
   setAcceptHoverEvents(true);
+}
+
+QString Item::get_name() {
+  return name;
+}
+
+void Item::set_name(const QString& name) {
+  this->name = name;
 }
 
 QColor Item::get_background() {

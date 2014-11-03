@@ -20,16 +20,9 @@ namespace widget {
       return nullptr;
     }
   public:
-    Ingredient(const QString& name, const T& value) {
-      this->name = name;
+    Ingredient(const QString& name, const T& value) : Item(name) {
       this->value = value;
       ingredients.push_back(this);
-    }
-    QString get_name() {
-      return name;
-    }
-    void set_name(const QString& name) {
-      this->name = name;
     }
     T get_value() {
       return value;

@@ -14,6 +14,9 @@ namespace widget {
     typedef std::vector<ClickCallback> ClickCallbacks;
   public:
     Item(QGraphicsItem* parent = 0);
+    Item(const QString& name, QGraphicsItem* parent = 0);
+    QString get_name();
+    void set_name(const QString& name);
     QColor get_background();
     void set_background(const QColor& background);
     QFont get_font();
@@ -23,6 +26,7 @@ namespace widget {
     QFontMetrics metrics() const;
     Item* on_click(const ClickCallback& callback);
   private:
+    QString name;
     QColor background;
     QFont font;
     bool hover = false;

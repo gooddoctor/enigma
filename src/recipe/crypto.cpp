@@ -13,6 +13,12 @@ Crypto::Crypto() {
   add_ingredient(Ingredient("save", false));
   //add some commin binding
   add_binding("input", "output");
+  //add some common descriptions
+  add_description("input", "Входной файл?");
+  add_description("output", "Файл на выходе?");
+  add_description("password", "Пароль?");
+  add_description("iv", "Вектор???");
+  add_description("save", "Сохранить оригинал?");
 }
 
 Crypto* Crypto::apply(const Callback& callback) {

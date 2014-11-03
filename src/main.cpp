@@ -52,6 +52,17 @@ int main(int argc, char** argv) {
   });      
   scene->setSceneRect(0, 0, 640, 480);
   
+  
+  Image* help = new Image("resource/help.png");
+  help->setPos(570, 5);
+  scene->addItem(help);
+  help->on_click([encrypt, scene]() {
+    Hint* hint = Hint::instance();
+    hint->set_hint(encrypt->get_description(scene->get_one()->get_name()));
+    hint->move(main_window->pos().x() + 10, main_window->pos().y() + 10);
+    hint->show();
+  });
+
   Button* backward = new Button("Назад");
   backward->setPos(0, 440);
   backward->on_click([scene]() {
