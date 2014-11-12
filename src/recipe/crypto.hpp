@@ -13,11 +13,13 @@ namespace recipe {
 
   class Encrypt : public Crypto {
   public:
+    Encrypt();
     Encrypt* cook() override;
   };
 
   class Decrypt : public Crypto {
   public:
+    Decrypt();
     Decrypt* cook() override;
   };  
 }

@@ -49,9 +49,11 @@ namespace widget {
   class Image : public Item {
   public:
     Image(const QString& image, QGraphicsItem* parent = 0);
+    void set_border(bool border);
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) override;
   private:
+    bool border = true;
     QPixmap image;
   };
 }

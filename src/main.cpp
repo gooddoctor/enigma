@@ -53,25 +53,40 @@ int main(int argc, char** argv) {
   scene->setSceneRect(0, 0, 640, 480);
   
   
+  Image* mouse_right = new Image("resource/mouse_right.png");
+  mouse_right->set_border(false);
+  mouse_right->setPos(520, 5);
+  scene->addItem(mouse_right);
+
   Image* help = new Image("resource/help.png");
   help->setPos(570, 5);
   scene->addItem(help);
   help->on_click([encrypt, scene]() {
     Hint* hint = Hint::instance();
-    hint->set_hint(encrypt->get_description(scene->get_one()->get_name()));
-    hint->move(main_window->pos().x() + 10, main_window->pos().y() + 10);
+    hint->set_short_hint(encrypt->get_long_description(scene->get_one()->get_name()));
+    hint->move(main_window->geometry().x(), main_window->geometry().y());
     hint->show();
   });
 
+  Image* wheel_down = new Image("resource/wheel_down.png");
+  wheel_down->set_border(false);
+  wheel_down->setPos(0, 435);
+  scene->addItem(wheel_down);
+
   Button* backward = new Button("Назад");
-  backward->setPos(0, 440);
+  backward->setPos(wheel_down->boundingRect().width() + 5, 440);
   backward->on_click([scene]() {
     scene->before_one();
   });
   scene->addItem(backward);
 
+  Image* wheel_up = new Image("resource/wheel_up.png");
+  wheel_up->set_border(false);
+  wheel_up->setPos(500, 435);
+  scene->addItem(wheel_up);
+
   Button* next = new Button("Вперед");
-  next->setPos(backward->boundingRect().width() + 5, 440);
+  next->setPos(wheel_up->boundingRect().width() + 500 + 5, 440);
   next->on_click([scene]() {
     scene->after_one();
   });

@@ -125,13 +125,22 @@ Recipe::Bindings Recipe::get_bindings() {
   return bindings;
 }
 
-Recipe* Recipe::add_description(const QString& ingredient, const QString& description) {
-  descriptions.insert(std::pair<QString, QString>{ingredient, description});
+Recipe* Recipe::add_short_description(const QString& ingredient, const QString& description) {
+  short_descriptions.insert(std::pair<QString, QString>{ingredient, description});
   return this;
 }
 
-QString Recipe::get_description(const QString& ingredient) {
-  return descriptions[ingredient];
+QString Recipe::get_short_description(const QString& ingredient) {
+  return short_descriptions[ingredient];
+}
+
+Recipe* Recipe::add_long_description(const QString& ingredient, const QString& description) {
+  long_descriptions.insert(std::pair<QString, QString>{ingredient, description});
+  return this;
+}
+
+QString Recipe::get_long_description(const QString& ingredient) {
+  return long_descriptions[ingredient];
 }
 
 QString Recipe::to_string() {

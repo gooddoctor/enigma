@@ -7,7 +7,7 @@
 
 using namespace widget;
 
-void Hint::set_hint(const QString& hint) {
+void Hint::set_short_hint(const QString& hint) {
   hint_item->setHtml(hint);
 }
 
@@ -20,15 +20,18 @@ Hint::Hint() : QWidget(nullptr, Qt::FramelessWindowHint) {
   background = QPixmap("widget/hint/resource/background.png");
   //create item  
   hint_item = new QGraphicsTextItem();
+  hint_item->setTextWidth(200);
+  hint_item->setFont(QFont("Monospace", 20, QFont::Bold));
   //create scene
   QGraphicsScene* scene = new QGraphicsScene();
-  scene->setBackgroundBrush(QBrush(QColor(105, 210, 231), Qt::SolidPattern));
   scene->addItem(hint_item);
   //create view
   QGraphicsView* view = new QGraphicsView(scene, this);
-  view->setStyleSheet("background: transparent");
+  view->setStyleSheet("background: transparent; border: none;");
   view->setAttribute(Qt::WA_TranslucentBackground, true);
   view->setGeometry(6, 6, background.size().width() - 10, background.size().height() - 10);
+  view->setGeometry(background.size().width() / 2 + 40, 60,
+		    background.size().width() / 2 - 60, background.size().height() - 150);
   //configure widget
   setGraphicsEffect(new QGraphicsOpacityEffect(this));
   setAttribute(Qt::WA_TranslucentBackground, true);

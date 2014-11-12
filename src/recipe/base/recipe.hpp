@@ -62,14 +62,17 @@ namespace recipe {
     virtual Ingredients get_ingredients();
     virtual Recipe* add_binding(const QString& first, const QString& second);
     virtual Bindings get_bindings();
-    virtual Recipe* add_description(const QString& ingredient, const QString& description);
-    virtual QString get_description(const QString& ingredient);
+    virtual Recipe* add_short_description(const QString& ingredient, const QString& description);
+    virtual QString get_short_description(const QString& ingredient);
+    virtual Recipe* add_long_description(const QString& ingredient, const QString& description);
+    virtual QString get_long_description(const QString& ingredient);
     virtual Recipe* cook() = 0;
     virtual QString to_string();
   private:
     Ingredients ingredients;
     Bindings bindings;
-    Descriptions descriptions;
+    Descriptions short_descriptions;
+    Descriptions long_descriptions;
   };
 
   void e_assert(bool expression, const QString& message);

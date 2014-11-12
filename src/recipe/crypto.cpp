@@ -13,12 +13,14 @@ Crypto::Crypto() {
   add_ingredient(Ingredient("save", false));
   //add some commin binding
   add_binding("input", "output");
-  //add some common descriptions
-  add_description("input", "Входной файл?");
-  add_description("output", "Файл на выходе?");
-  add_description("password", "Пароль?");
-  add_description("iv", "Вектор???");
-  add_description("save", "Сохранить оригинал?");
+  //add some common short descriptions
+  add_short_description("input", "Входной файл?");
+  add_short_description("output", "Файл на выходе?");
+  add_short_description("password", "Пароль?");
+  add_short_description("iv", "Вектор???");
+  add_short_description("save", "Сохранить оригинал?");
+  //add some common long descriptions
+  add_long_description("save", " Указывает на то, будет ли сохранен входной файл");
 }
 
 Crypto* Crypto::apply(const Callback& callback) {
@@ -61,11 +63,25 @@ Crypto* Crypto::apply(const Callback& callback) {
 }
 
 
+Encrypt::Encrypt() {
+  add_long_description("input", "Указывает файл который будет содержать исходный текст");
+  add_long_description("output", "Указывает файл который будет содержать шифрованный текст");
+  add_long_description("password", "Ключ который будет использоваться для шифрования");
+  add_long_description("iv", "Инициализационный вектор использованный в шифровании...");
+}
+
 Encrypt* Encrypt::cook() {
   apply(gcry_cipher_encrypt);
   return this;
 }
 
+
+Decrypt::Decrypt(){
+  add_long_description("input", "Указывает файл который будет содержать шифрованный текст");
+  add_long_description("output", "Указывает файл который будет содержать расшифрованный текст");
+  add_long_description("password", "Указывает ключ который будет использоваться при расшифровки");
+  add_long_description("iv", "Инициализационный вектор использованный при расшифровки...");
+}
 
 Decrypt* Decrypt::cook() {
   apply(gcry_cipher_decrypt);

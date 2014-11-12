@@ -13,7 +13,7 @@ namespace widget {
       return instance;
     }
   public:
-    void set_hint(const QString& hint);
+    void set_short_hint(const QString& hint);
   private:
     Hint();
   private:

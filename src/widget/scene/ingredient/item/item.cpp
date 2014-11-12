@@ -96,11 +96,16 @@ Image::Image(const QString& image, QGraphicsItem* parent) : Item(parent) {
   this->image = QPixmap(image);
 }
 
+void Image::set_border(bool border) {
+  this->border = border;
+}
+
 QRectF Image::boundingRect() const {
   return QRectF(0, 0, image.width(), image.height());
 }
 
 void Image::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
   painter->drawPixmap(0, 0, image);
-  painter->drawRect(boundingRect());
+  if (border)
+    painter->drawRect(boundingRect());
 }
