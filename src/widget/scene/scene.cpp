@@ -1,9 +1,11 @@
 #include "scene.hpp"
 
 #include <QFileSystemModel>
+#include <QGraphicsSceneMouseEvent>
 #include <QStandardPaths>
 #include <QTextEdit>
 #include <QTreeView>
+
 
 using namespace widget;
 
@@ -25,6 +27,34 @@ Scene* Scene::on_cancel(const Item::ClickCallback& callback) {
   cancel->on_click(callback);
   return this;
 }
+
+Scene* Scene::on_mouse_right(const Item::ClickCallback& callback) {
+  mouse_right_callbacks.push_back(callback);
+  return this;
+}
+
+Scene* Scene::on_wheel_up(const WheelCallback& callback) {
+  wheel_up_callbacks.push_back(callback);
+  return this;
+}
+
+Scene* Scene::on_wheel_down(const WheelCallback& callback) {
+  wheel_down_callbacks.push_back(callback);
+  return this;
+}
+
+void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
+  QGraphicsScene::mousePressEvent(e);
+  if (e->button() == Qt::RightButton)
+    for (auto it : mouse_right_callbacks) it();
+}
+
+void Scene::wheelEvent(QGraphicsSceneWheelEvent* e) {
+  if (e->delta() > 0)
+    for (auto it : wheel_up_callbacks) it();
+  else
+    for (auto it : wheel_down_callbacks) it();
+}  
 
 
 StringScene::StringScene() {

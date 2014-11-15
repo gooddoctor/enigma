@@ -8,10 +8,22 @@
 
 namespace widget {
   class Scene : public QGraphicsScene { Q_OBJECT
+    typedef std::function<void(void)> WheelCallback;
+    typedef std::vector<WheelCallback> WheelCallbacks;
   public:
     Scene();
     Scene* on_finish(const Item::ClickCallback& callback);
     Scene* on_cancel(const Item::ClickCallback& callback);
+    Scene* on_mouse_right(const Item::ClickCallback& callback);
+    Scene* on_wheel_up(const WheelCallback& callback);
+    Scene* on_wheel_down(const WheelCallback& callback);
+  private:
+    Item::ClickCallbacks mouse_right_callbacks;
+    WheelCallbacks wheel_up_callbacks;
+    WheelCallbacks wheel_down_callbacks;
+  protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* e) override;
+    void wheelEvent(QGraphicsSceneWheelEvent* e) override;
   protected:
     Button* finish;
     Button* cancel;

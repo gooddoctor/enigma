@@ -1,5 +1,6 @@
 #include "item.hpp"
 
+#include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
 using namespace widget;
@@ -66,7 +67,8 @@ void Item::hoverLeaveEvent(QGraphicsSceneHoverEvent* e) {
 
 void Item::mousePressEvent(QGraphicsSceneMouseEvent* e) {
   QGraphicsItem::mousePressEvent(e);
-  for (const auto& it : click_callbacks) it();
+  if (e->button() == Qt::LeftButton)
+    for (const auto& it : click_callbacks) it();
 }
 
 

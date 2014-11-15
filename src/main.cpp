@@ -28,6 +28,22 @@ int main(int argc, char** argv) {
   encrypt->add_ingredient(recipe::Ingredient("save", true));
 
   OneIngredientScene* scene = new OneIngredientScene();
+
+  scene->on_mouse_right([encrypt, scene]() {
+    Hint* hint = Hint::instance();
+    hint->set_short_hint(encrypt->get_long_description(scene->get_one()->get_name()));
+    hint->move(main_window->geometry().x(), main_window->geometry().y());
+    hint->show();
+  });
+  
+  scene->on_wheel_up([scene]() {
+    scene->after_one();
+  });
+
+  scene->on_wheel_down([scene]() {
+    scene->before_one();
+  });
+
   scene->on_finish([encrypt]() {
     for (auto& it : encrypt->get_ingredients()) {
       switch (it.second.get_type()) {
