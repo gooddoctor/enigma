@@ -18,24 +18,24 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-struct qt_meta_stringdata_element__EncryptDialog_t {
+struct qt_meta_stringdata_element__dialog__Encrypt_t {
     QByteArrayData data[1];
-    char stringdata[23];
+    char stringdata[25];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_element__EncryptDialog_t, stringdata) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_element__dialog__Encrypt_t, stringdata) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_element__EncryptDialog_t qt_meta_stringdata_element__EncryptDialog = {
+static const qt_meta_stringdata_element__dialog__Encrypt_t qt_meta_stringdata_element__dialog__Encrypt = {
     {
-QT_MOC_LITERAL(0, 0, 22)
+QT_MOC_LITERAL(0, 0, 24)
     },
-    "element::EncryptDialog"
+    "element::dialog::Encrypt"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_element__EncryptDialog[] = {
+static const uint qt_meta_data_element__dialog__Encrypt[] = {
 
  // content:
        7,       // revision
@@ -51,7 +51,7 @@ static const uint qt_meta_data_element__EncryptDialog[] = {
        0        // eod
 };
 
-void element::EncryptDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void element::dialog::Encrypt::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     Q_UNUSED(_o);
     Q_UNUSED(_id);
@@ -59,26 +59,26 @@ void element::EncryptDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _
     Q_UNUSED(_a);
 }
 
-const QMetaObject element::EncryptDialog::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_element__EncryptDialog.data,
-      qt_meta_data_element__EncryptDialog,  qt_static_metacall, 0, 0}
+const QMetaObject element::dialog::Encrypt::staticMetaObject = {
+    { &QDialog::staticMetaObject, qt_meta_stringdata_element__dialog__Encrypt.data,
+      qt_meta_data_element__dialog__Encrypt,  qt_static_metacall, 0, 0}
 };
 
 
-const QMetaObject *element::EncryptDialog::metaObject() const
+const QMetaObject *element::dialog::Encrypt::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *element::EncryptDialog::qt_metacast(const char *_clname)
+void *element::dialog::Encrypt::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_element__EncryptDialog.stringdata))
-        return static_cast<void*>(const_cast< EncryptDialog*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_element__dialog__Encrypt.stringdata))
+        return static_cast<void*>(const_cast< Encrypt*>(this));
     return QDialog::qt_metacast(_clname);
 }
 
-int element::EncryptDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int element::dialog::Encrypt::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QDialog::qt_metacall(_c, _id, _a);
     if (_id < 0)

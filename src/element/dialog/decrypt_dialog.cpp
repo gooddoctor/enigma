@@ -2,9 +2,9 @@
 
 #include "decrypt_dialog.hpp"
 
-using namespace element;
+using namespace element::dialog;
 
-DecryptDialog::DecryptDialog(QWidget* parent) : QDialog(parent) {
+Decrypt::Decrypt(QWidget* parent) : QDialog(parent) {
   password_label = new QLabel("Пароль");
   password_input = new QLineEdit();
   show_check = new QCheckBox("Просмотр в редакторе");
@@ -23,10 +23,10 @@ DecryptDialog::DecryptDialog(QWidget* parent) : QDialog(parent) {
   setLayout(layout);
 }
 
-QString DecryptDialog::get_password() {
+QString Decrypt::get_password() {
   return password_input->text();
 }
 
-bool DecryptDialog::get_show() {
+bool Decrypt::get_show() {
   return show_check->isChecked();
 }

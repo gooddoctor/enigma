@@ -2,9 +2,9 @@
 
 #include "encrypt_dialog.hpp"
 
-using namespace element;
+using namespace element::dialog;
 
-EncryptDialog::EncryptDialog(QWidget* parent) : QDialog(parent) {
+Encrypt::Encrypt(QWidget* parent) : QDialog(parent) {
   password_label = new QLabel("Пароль");
   password_input = new QLineEdit();
   remove_check = new QCheckBox("Удалить оригинал");
@@ -23,11 +23,11 @@ EncryptDialog::EncryptDialog(QWidget* parent) : QDialog(parent) {
   setLayout(layout);
 }
 
-QString EncryptDialog::get_password() {
+QString Encrypt::get_password() {
   return password_input->text();
 }
 
-bool EncryptDialog::get_remove() {
+bool Encrypt::get_remove() {
   return remove_check->isChecked();
 }
 

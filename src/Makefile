@@ -15,10 +15,10 @@ CXX           = clang++
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -std=c++11 -O2 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I. -I. -Ielement -I../../../tools/Qt/5.3/gcc_64/include -I../../../tools/Qt/5.3/gcc_64/include/QtWidgets -I../../../tools/Qt/5.3/gcc_64/include/QtGui -I../../../tools/Qt/5.3/gcc_64/include/QtCore -I.
+INCPATH       = -I../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I. -I. -Ielement -I/usr/local/include -I../../../tools/Qt/5.3/gcc_64/include -I../../../tools/Qt/5.3/gcc_64/include/QtWidgets -I../../../tools/Qt/5.3/gcc_64/include/QtGui -I../../../tools/Qt/5.3/gcc_64/include/QtCore -I.
 LINK          = clang++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/home/gooddocteur/tools/Qt/5.3/gcc_64 -Wl,-rpath,/home/gooddocteur/tools/Qt/5.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/home/gooddocteur/tools/Qt/5.3/gcc_64/lib -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/local/lib -lgcrypt -lgpg-error -L/home/gooddocteur/tools/Qt/5.3/gcc_64/lib -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /home/gooddocteur/bin/qmake
@@ -48,24 +48,30 @@ OBJECTS_DIR   = ./
 SOURCES       = element/dialog/encrypt_dialog.cpp \
 		element/dialog/decrypt_dialog.cpp \
 		element/element.cpp \
-		element/encrypt.cpp \
-		element/decrypt.cpp \
+		element/encrypt_element.cpp \
+		element/decrypt_element.cpp \
+		function/function.cpp \
+		function/encrypt_function.cpp \
+		function/decrypt_function.cpp \
 		main.cpp moc_encrypt_dialog.cpp \
 		moc_decrypt_dialog.cpp \
 		moc_element.cpp \
-		moc_encrypt.cpp \
-		moc_decrypt.cpp
+		moc_encrypt_element.cpp \
+		moc_decrypt_element.cpp
 OBJECTS       = encrypt_dialog.o \
 		decrypt_dialog.o \
 		element.o \
-		encrypt.o \
-		decrypt.o \
+		encrypt_element.o \
+		decrypt_element.o \
+		function.o \
+		encrypt_function.o \
+		decrypt_function.o \
 		main.o \
 		moc_encrypt_dialog.o \
 		moc_decrypt_dialog.o \
 		moc_element.o \
-		moc_encrypt.o \
-		moc_decrypt.o
+		moc_encrypt_element.o \
+		moc_decrypt_element.o
 DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/common/shell-unix.conf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/common/unix.conf \
@@ -162,6 +168,7 @@ DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_pre.prf \
 		element/dialog/include.inc \
 		element/include.inc \
+		function/include.inc \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_post.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf \
@@ -178,8 +185,11 @@ DIST          = ../../../tools/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		enigma.pro element/dialog/encrypt_dialog.cpp \
 		element/dialog/decrypt_dialog.cpp \
 		element/element.cpp \
-		element/encrypt.cpp \
-		element/decrypt.cpp \
+		element/encrypt_element.cpp \
+		element/decrypt_element.cpp \
+		function/function.cpp \
+		function/encrypt_function.cpp \
+		function/decrypt_function.cpp \
 		main.cpp
 QMAKE_TARGET  = enigma
 DESTDIR       = #avoid trailing-slash linebreak
@@ -309,6 +319,7 @@ Makefile: enigma.pro ../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++/qmake.conf .
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_pre.prf \
 		element/dialog/include.inc \
 		element/include.inc \
+		function/include.inc \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/resolve_config.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_post.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf \
@@ -423,6 +434,7 @@ Makefile: enigma.pro ../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++/qmake.conf .
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_pre.prf:
 element/dialog/include.inc:
 element/include.inc:
+function/include.inc:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/resolve_config.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/default_post.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf:
@@ -447,7 +459,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/enigma1.0.0 || mkdir -p .tmp/enigma1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.hpp element/dialog/decrypt_dialog.hpp element/element.hpp element/encrypt.hpp element/decrypt.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.cpp element/dialog/decrypt_dialog.cpp element/element.cpp element/encrypt.cpp element/decrypt.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.hpp element/dialog/decrypt_dialog.hpp element/element.hpp element/encrypt_element.hpp element/decrypt_element.hpp function/function.hpp function/encrypt_function.hpp function/decrypt_function.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.cpp element/dialog/decrypt_dialog.cpp element/element.cpp element/encrypt_element.cpp element/decrypt_element.cpp function/function.cpp function/encrypt_function.cpp function/decrypt_function.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
 
 
 clean:compiler_clean 
@@ -470,9 +482,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_encrypt_dialog.cpp moc_decrypt_dialog.cpp moc_element.cpp moc_encrypt.cpp moc_decrypt.cpp
+compiler_moc_header_make_all: moc_encrypt_dialog.cpp moc_decrypt_dialog.cpp moc_element.cpp moc_encrypt_element.cpp moc_decrypt_element.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_encrypt_dialog.cpp moc_decrypt_dialog.cpp moc_element.cpp moc_encrypt.cpp moc_decrypt.cpp
+	-$(DEL_FILE) moc_encrypt_dialog.cpp moc_decrypt_dialog.cpp moc_element.cpp moc_encrypt_element.cpp moc_decrypt_element.cpp
 moc_encrypt_dialog.cpp: ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QCheckBox \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qcheckbox.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qabstractbutton.h \
@@ -590,7 +602,7 @@ moc_encrypt_dialog.cpp: ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QCheckBox
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QPushButton \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qpushbutton.h \
 		element/dialog/encrypt_dialog.hpp
-	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/dialog/encrypt_dialog.hpp -o moc_encrypt_dialog.cpp
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/usr/local/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/dialog/encrypt_dialog.hpp -o moc_encrypt_dialog.cpp
 
 moc_decrypt_dialog.cpp: ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QCheckBox \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qcheckbox.h \
@@ -709,7 +721,7 @@ moc_decrypt_dialog.cpp: ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QCheckBox
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QPushButton \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qpushbutton.h \
 		element/dialog/decrypt_dialog.hpp
-	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/dialog/decrypt_dialog.hpp -o moc_decrypt_dialog.cpp
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/usr/local/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/dialog/decrypt_dialog.hpp -o moc_decrypt_dialog.cpp
 
 moc_element.cpp: ../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qevent.h \
@@ -817,9 +829,9 @@ moc_element.cpp: ../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcursor.h \
 		element/element.hpp
-	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/element.hpp -o moc_element.cpp
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/usr/local/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/element.hpp -o moc_element.cpp
 
-moc_encrypt.cpp: element/element.hpp \
+moc_encrypt_element.cpp: element/element.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qevent.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
@@ -925,10 +937,10 @@ moc_encrypt.cpp: element/element.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpalette.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcursor.h \
-		element/encrypt.hpp
-	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/encrypt.hpp -o moc_encrypt.cpp
+		element/encrypt_element.hpp
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/usr/local/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/encrypt_element.hpp -o moc_encrypt_element.cpp
 
-moc_decrypt.cpp: element/element.hpp \
+moc_decrypt_element.cpp: element/element.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qevent.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
@@ -1034,8 +1046,8 @@ moc_decrypt.cpp: element/element.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpalette.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcursor.h \
-		element/decrypt.hpp
-	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/decrypt.hpp -o moc_decrypt.cpp
+		element/decrypt_element.hpp
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/moc $(DEFINES) -I/home/gooddocteur/tools/Qt/5.3/gcc_64/mkspecs/linux-g++ -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src -I/home/gooddocteur/projects/enigma/src/element -I/usr/local/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtWidgets -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtGui -I/home/gooddocteur/tools/Qt/5.3/gcc_64/include/QtCore element/decrypt_element.hpp -o moc_decrypt_element.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1414,7 +1426,7 @@ element.o: element/element.cpp ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QF
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o element.o element/element.cpp
 
-encrypt.o: element/encrypt.cpp element/dialog/encrypt_dialog.hpp \
+encrypt_element.o: element/encrypt_element.cpp element/dialog/encrypt_dialog.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QCheckBox \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qcheckbox.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qabstractbutton.h \
@@ -1531,15 +1543,15 @@ encrypt.o: element/encrypt.cpp element/dialog/encrypt_dialog.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QPushButton \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		element/encrypt.hpp \
+		element/encrypt_element.hpp \
 		element/element.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QWidget
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o encrypt.o element/encrypt.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o encrypt_element.o element/encrypt_element.cpp
 
-decrypt.o: element/decrypt.cpp element/dialog/decrypt_dialog.hpp \
+decrypt_element.o: element/decrypt_element.cpp element/dialog/decrypt_dialog.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QCheckBox \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qcheckbox.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qabstractbutton.h \
@@ -1656,17 +1668,18 @@ decrypt.o: element/decrypt.cpp element/dialog/decrypt_dialog.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QPushButton \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		element/decrypt.hpp \
+		element/decrypt_element.hpp \
 		element/element.hpp \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QWidget
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o decrypt.o element/decrypt.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o decrypt_element.o element/decrypt_element.cpp
 
-main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QApplication \
-		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qapplication.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcoreapplication.h \
+function.o: function/function.cpp ../../../tools/Qt/5.3/gcc_64/include/QtCore/QFile \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
@@ -1695,16 +1708,16 @@ main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QApplication \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlist.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
@@ -1715,69 +1728,140 @@ main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QApplication \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qeventloop.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsize.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcursor.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrect.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpalette.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qpair.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvector.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qregion.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qline.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qimage.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qhash.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfont.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qkeysequence.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qevent.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qvariant.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmap.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlocale.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qset.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurl.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfile.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qvector2d.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtouchdevice.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qguiapplication.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qinputmethod.h \
-		element/encrypt.hpp \
-		element/element.hpp \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpen.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QWidget
+		function/function.hpp \
+		/usr/local/include/gcrypt.h \
+		/usr/local/include/gpg-error.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QByteArray \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o function.o function/function.cpp
+
+encrypt_function.o: function/encrypt_function.cpp function/encrypt_function.hpp \
+		function/function.hpp \
+		/usr/local/include/gcrypt.h \
+		/usr/local/include/gpg-error.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QByteArray \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o encrypt_function.o function/encrypt_function.cpp
+
+decrypt_function.o: function/decrypt_function.cpp function/decrypt_function.hpp \
+		function/function.hpp \
+		/usr/local/include/gcrypt.h \
+		/usr/local/include/gpg-error.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QByteArray \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o decrypt_function.o function/decrypt_function.cpp
+
+main.o: main.cpp function/encrypt_function.hpp \
+		function/function.hpp \
+		/usr/local/include/gcrypt.h \
+		/usr/local/include/gpg-error.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QByteArray \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtCore/QString
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 moc_encrypt_dialog.o: moc_encrypt_dialog.cpp 
@@ -1789,11 +1873,11 @@ moc_decrypt_dialog.o: moc_decrypt_dialog.cpp
 moc_element.o: moc_element.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_element.o moc_element.cpp
 
-moc_encrypt.o: moc_encrypt.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_encrypt.o moc_encrypt.cpp
+moc_encrypt_element.o: moc_encrypt_element.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_encrypt_element.o moc_encrypt_element.cpp
 
-moc_decrypt.o: moc_decrypt.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_decrypt.o moc_decrypt.cpp
+moc_decrypt_element.o: moc_decrypt_element.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_decrypt_element.o moc_decrypt_element.cpp
 
 ####### Install
 

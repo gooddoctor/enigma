@@ -1,13 +1,13 @@
 #include "dialog/encrypt_dialog.hpp"
 
-#include "encrypt.hpp"
+#include "encrypt_element.hpp"
 
 using namespace element;
 
 Encrypt::Encrypt(QWidget* parent) : Element(QImage("resource/encrypt.png"), parent) { }
 
 void Encrypt::select(const QString& file) {
-  EncryptDialog dialog;
+  dialog::Encrypt dialog;
   if (dialog.exec())
     fire_action(file, dialog.get_password(), {{"remove", dialog.get_remove()}});
 }

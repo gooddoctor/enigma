@@ -1,18 +1,9 @@
-#include <QDebug>
-#include <QApplication>
+#include "function/encrypt_function.hpp"
+#include "function/decrypt_function.hpp"
 
-#include "element/encrypt.hpp"
-
-using namespace element;
+using namespace function;
 
 int main(int argc, char** argv) {
-  std::map<QString, QString> temp = {{"foo", "bar"}, {"foo", "bar"}};
-  QApplication app(argc, argv);
-  Encrypt decrypt;
-  decrypt.on_action([](const QString& file, const QString& password, 
-		       const std::map<QString, bool>& options) {
-    qDebug() << file << password << options.at("remove");
-  });
-  decrypt.show();
-  return app.exec();
+  encrypt("test.txt", "test.dec", "hello how you doin");
+  decrypt("test.dec", "test.dec.txt", "hello how you doin");
 }

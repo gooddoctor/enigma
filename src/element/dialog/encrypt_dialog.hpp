@@ -8,18 +8,20 @@
 #include <QPushButton>
 
 namespace element {
-  class EncryptDialog : public QDialog { Q_OBJECT
-  public:
-    EncryptDialog(QWidget* parent = 0);
-    QString get_password();
-    bool get_remove();
-  private:
-    QLabel* password_label;
-    QLineEdit* password_input;
-    QCheckBox* remove_check;
-    QPushButton* ok_button;
-    QPushButton* cancel_button;
-  };
+  namespace dialog {
+    class Encrypt : public QDialog { Q_OBJECT
+    public:
+      Encrypt(QWidget* parent = 0);
+      QString get_password();
+      bool get_remove();
+    private:
+      QLabel* password_label;
+      QLineEdit* password_input;
+      QCheckBox* remove_check;
+      QPushButton* ok_button;
+      QPushButton* cancel_button;
+    };
+  }
 }
 
 #endif
