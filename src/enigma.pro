@@ -13,5 +13,6 @@ LIBS += -lgcrypt -lgpg-error
 
 include(element/include.inc)
 include(function/include.inc)
+include(view/include.inc)
 
 SOURCES += main.cpp
