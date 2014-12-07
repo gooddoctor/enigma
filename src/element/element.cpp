@@ -10,6 +10,10 @@ Element::Element(const QImage& image, QWidget* parent) : QWidget(parent) {
   setAcceptDrops(true);
 }
 
+QSize Element::sizeHint() const {
+  return image.size();
+}
+
 Element* Element::on_action(const ActionCallback& callback) {
   action_callbacks.push_back(callback);
   return this;

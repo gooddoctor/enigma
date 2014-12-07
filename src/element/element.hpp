@@ -12,6 +12,7 @@ namespace element {
     typedef std::vector<ActionCallback> ActionCallbacks;
   public:
     Element(const QImage& image, QWidget* parent = 0);
+    QSize sizeHint() const override;
     Element* on_action(const ActionCallback& callback);
   private:
     ActionCallbacks action_callbacks;

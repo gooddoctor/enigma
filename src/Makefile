@@ -56,7 +56,8 @@ SOURCES       = element/dialog/encrypt_dialog.cpp \
 		view/view.cpp \
 		view/text_view.cpp \
 		view/image_view.cpp \
-		main.cpp moc_encrypt_dialog.cpp \
+		main.cpp qrc_enigma_res.cpp \
+		moc_encrypt_dialog.cpp \
 		moc_decrypt_dialog.cpp \
 		moc_element.cpp \
 		moc_encrypt_element.cpp \
@@ -74,6 +75,7 @@ OBJECTS       = encrypt_dialog.o \
 		text_view.o \
 		image_view.o \
 		main.o \
+		qrc_enigma_res.o \
 		moc_encrypt_dialog.o \
 		moc_decrypt_dialog.o \
 		moc_element.o \
@@ -347,6 +349,7 @@ Makefile: enigma.pro ../../../tools/Qt/5.3/gcc_64/mkspecs/linux-g++/qmake.conf .
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/yacc.prf \
 		../../../tools/Qt/5.3/gcc_64/mkspecs/features/lex.prf \
 		enigma.pro \
+		enigma_res.qrc \
 		/home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Widgets.prl \
 		/home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Gui.prl \
 		/home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Core.prl
@@ -463,6 +466,7 @@ view/include.inc:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/yacc.prf:
 ../../../tools/Qt/5.3/gcc_64/mkspecs/features/lex.prf:
 enigma.pro:
+enigma_res.qrc:
 /home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Widgets.prl:
 /home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Gui.prl:
 /home/gooddocteur/tools/Qt/5.3/gcc_64/lib/libQt5Core.prl:
@@ -473,7 +477,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/enigma1.0.0 || mkdir -p .tmp/enigma1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.hpp element/dialog/decrypt_dialog.hpp element/element.hpp element/encrypt_element.hpp element/decrypt_element.hpp function/function.hpp function/encrypt_function.hpp function/decrypt_function.hpp view/view.hpp view/text_view.hpp view/image_view.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.cpp element/dialog/decrypt_dialog.cpp element/element.cpp element/encrypt_element.cpp element/decrypt_element.cpp function/function.cpp function/encrypt_function.cpp function/decrypt_function.cpp view/view.cpp view/text_view.cpp view/image_view.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/enigma1.0.0/ && $(COPY_FILE) --parents enigma_res.qrc .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.hpp element/dialog/decrypt_dialog.hpp element/element.hpp element/encrypt_element.hpp element/decrypt_element.hpp function/function.hpp function/encrypt_function.hpp function/decrypt_function.hpp view/view.hpp view/text_view.hpp view/image_view.hpp .tmp/enigma1.0.0/ && $(COPY_FILE) --parents element/dialog/encrypt_dialog.cpp element/dialog/decrypt_dialog.cpp element/element.cpp element/encrypt_element.cpp element/decrypt_element.cpp function/function.cpp function/encrypt_function.cpp function/decrypt_function.cpp view/view.cpp view/text_view.cpp view/image_view.cpp main.cpp .tmp/enigma1.0.0/ && (cd `dirname .tmp/enigma1.0.0` && $(TAR) enigma1.0.0.tar enigma1.0.0 && $(COMPRESS) enigma1.0.0.tar) && $(MOVE) `dirname .tmp/enigma1.0.0`/enigma1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/enigma1.0.0
 
 
 clean:compiler_clean 
@@ -494,8 +498,14 @@ mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
 check: first
 
-compiler_rcc_make_all:
+compiler_rcc_make_all: qrc_enigma_res.cpp
 compiler_rcc_clean:
+	-$(DEL_FILE) qrc_enigma_res.cpp
+qrc_enigma_res.cpp: enigma_res.qrc \
+		resource/decrypt.png \
+		resource/encrypt.png
+	/home/gooddocteur/tools/Qt/5.3/gcc_64/bin/rcc -name enigma_res enigma_res.qrc -o qrc_enigma_res.cpp
+
 compiler_moc_header_make_all: moc_encrypt_dialog.cpp moc_decrypt_dialog.cpp moc_element.cpp moc_encrypt_element.cpp moc_decrypt_element.cpp moc_image_view.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_encrypt_dialog.cpp moc_decrypt_dialog.cpp moc_element.cpp moc_encrypt_element.cpp moc_decrypt_element.cpp moc_image_view.cpp
@@ -1186,7 +1196,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_header_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_header_clean 
 
 ####### Compile
 
@@ -2403,6 +2413,20 @@ main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QApplication \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtouchdevice.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qguiapplication.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtGui/qinputmethod.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qboxlayout.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qlayout.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qgridlayout.h \
+		element/encrypt_element.hpp \
+		element/element.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QDragEnterEvent \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/QPainter \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QWidget \
+		element/decrypt_element.hpp \
 		function/encrypt_function.hpp \
 		function/function.hpp \
 		/usr/local/include/gcrypt.h \
@@ -2412,7 +2436,6 @@ main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QApplication \
 		function/decrypt_function.hpp \
 		view/image_view.hpp \
 		view/view.hpp \
-		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QWidget \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QLabel \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qlabel.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qframe.h \
@@ -2421,8 +2444,23 @@ main.o: main.cpp ../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QApplication \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qabstractscrollarea.h \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QSlider \
 		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qslider.h \
-		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qabstractslider.h
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qabstractslider.h \
+		view/text_view.hpp \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/QPlainTextEdit \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qplaintextedit.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtWidgets/qtextedit.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextdocument.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextcursor.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextformat.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qtextlayout.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qglyphrun.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qrawfont.h \
+		../../../tools/Qt/5.3/gcc_64/include/QtGui/qfontdatabase.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+qrc_enigma_res.o: qrc_enigma_res.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_enigma_res.o qrc_enigma_res.cpp
 
 moc_encrypt_dialog.o: moc_encrypt_dialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_encrypt_dialog.o moc_encrypt_dialog.cpp

@@ -15,4 +15,6 @@ include(element/include.inc)
 include(function/include.inc)
 include(view/include.inc)
 
+RESOURCES += $$PWD/enigma_res.qrc
+
 SOURCES += main.cpp

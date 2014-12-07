@@ -4,7 +4,7 @@
 
 using namespace element;
 
-Encrypt::Encrypt(QWidget* parent) : Element(QImage("resource/encrypt.png"), parent) { }
+Encrypt::Encrypt(QWidget* parent) : Element(QImage(":enigma/resource/encrypt.png"), parent) { }
 
 void Encrypt::select(const QString& file) {
   dialog::Encrypt dialog;

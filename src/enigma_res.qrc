@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="enigma">
+    <file>resource/encrypt.png</file>
+    <file>resource/decrypt.png</file>
+  </qresource>
+</RCC>

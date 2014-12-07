@@ -4,7 +4,7 @@
 
 using namespace element;
 
-Decrypt::Decrypt(QWidget* parent) : Element(QImage("resource/decrypt.png"), parent) { }
+Decrypt::Decrypt(QWidget* parent) : Element(QImage(":enigma/resource/decrypt.png"), parent) { }
 
 void Decrypt::select(const QString& file) {
   dialog::Decrypt dialog;
