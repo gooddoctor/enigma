@@ -10,7 +10,7 @@ View::View(const QString& file_path, QWidget* parent) : QWidget(parent) {
 }
 
 void View::closeEvent(QCloseEvent* e) {
-  if (QMessageBox::question(this, "Enigma", "Удалить?", 
+  if (QMessageBox::question(this, "Enigma", "Remove?", 
       QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
     QFile::remove(file_path);
 }

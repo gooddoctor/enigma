@@ -5,9 +5,9 @@
 using namespace element::dialog;
 
 Decrypt::Decrypt(QWidget* parent) : QDialog(parent) {
-  password_label = new QLabel("Пароль");
+  password_label = new QLabel("Password");
   password_input = new QLineEdit();
-  show_check = new QCheckBox("Просмотр в редакторе");
+  show_check = new QCheckBox("Show");
   //create buttons;
   ok_button = new QPushButton("OK");
   cancel_button = new QPushButton("Cancel");
